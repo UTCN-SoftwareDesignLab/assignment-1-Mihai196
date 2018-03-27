@@ -1,10 +1,14 @@
 import database.DBConnectionFactory;
+import repository.account.AccountRepository;
+import repository.account.AccountRepositoryMySQL;
 import repository.client.ClientRepository;
 import repository.client.ClientRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
+import service.account.AccountService;
+import service.account.AccountServiceImpl;
 import service.client.ClientService;
 import service.client.ClientServiceImpl;
 import service.user.AuthenticationService;
@@ -21,7 +25,11 @@ public class ComponentFactory {
     private final ClientService clientService;
 
     private final ClientRepository clientRepository;
-    private final UserRepository userRepository;
+    
+    private final AccountRepository accRepository;
+    private final AccountService accService;
+
+	private final UserRepository userRepository;
     private final RightsRolesRepository rightsRolesRepository;
 
     private static ComponentFactory instance;
@@ -40,6 +48,8 @@ public class ComponentFactory {
         this.authenticationService = new AuthenticationServiceMySQL(this.userRepository, this.rightsRolesRepository);
         this.clientRepository=new ClientRepositoryMySQL(connection);
         this.clientService=new ClientServiceImpl(clientRepository);
+        this.accRepository=new AccountRepositoryMySQL(connection);
+        this.accService=new AccountServiceImpl(accRepository);
     }
 
     public AuthenticationService getAuthenticationService() {
@@ -61,5 +71,13 @@ public class ComponentFactory {
 	public ClientRepository getClientRepository() {
 		return clientRepository;
 	}
+	public AccountRepository getAccRepository() {
+		return accRepository;
+	}
+
+	public AccountService getAccService() {
+		return accService;
+	}
+
     
 }

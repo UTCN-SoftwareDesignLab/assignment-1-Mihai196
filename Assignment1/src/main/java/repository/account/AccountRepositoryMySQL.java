@@ -24,10 +24,16 @@ public class AccountRepositoryMySQL implements AccountRepository {
 		// TODO Auto-generated method stub
 		try 
 		{
+			System.out.println("Hello from account repository");
+			System.out.println(account.getBalance());
+			System.out.print(account.getType());
+			System.out.println(account.getClientId());
+			System.out.println(account.getId());
+			System.out.println(account.getDateOfCreation());
 			PreparedStatement insertStatement=connection.prepareStatement("INSERT INTO account values (null, ?, ?, ?,?)");
 			insertStatement.setString(1, account.getType());
 			insertStatement.setDouble(2, account.getBalance());
-			insertStatement.setDate(3, new java.sql.Date(account.getDateOfCreation().getTime()));
+			insertStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			insertStatement.setInt(4, account.getClientId());
 			insertStatement.executeUpdate();
 			return true;
@@ -48,7 +54,7 @@ public class AccountRepositoryMySQL implements AccountRepository {
 			PreparedStatement updateStatement=connection.prepareStatement("UPDATE account SET type=?,balance=?,dateOfCreation=?,clientId=? WHERE id=?");
 			updateStatement.setString(1, account.getType());
 			updateStatement.setDouble(2, account.getBalance());
-			updateStatement.setDate(3, new java.sql.Date(account.getDateOfCreation().getTime()));
+			updateStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			updateStatement.setInt(4, account.getClientId());
 			updateStatement.setInt(5, account.getId());
 			updateStatement.executeUpdate();

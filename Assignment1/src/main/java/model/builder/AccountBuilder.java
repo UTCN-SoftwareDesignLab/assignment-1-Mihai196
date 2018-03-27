@@ -8,6 +8,10 @@ public class AccountBuilder {
 
 	private Account account;
 	//id type balance dateOfCreation clientId
+	public AccountBuilder()
+	{
+		account=new Account();
+	}
 	
 	public AccountBuilder setId(int id)
 	{

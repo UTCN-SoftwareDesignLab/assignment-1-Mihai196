@@ -96,8 +96,8 @@ public class SQLTableCreationFactory {
             	return "\tCREATE TABLE IF NOT EXISTS account (" +
                 "  id INT NOT NULL AUTO_INCREMENT," +
                 "  type VARCHAR(200) NOT NULL," +
-                "  balance double NOT NULL," +
-                "  dateOfCreation datetime NOT NULL,"+
+                "  balance DOUBLE NOT NULL," +
+                "  dateOfCreation datetime DEFAULT NULL,"+
                 "  clientId INT NOT NULL,"+
                 "  PRIMARY KEY (id)," +
                 "  CONSTRAINT client_fkid" +

@@ -3,6 +3,7 @@ package view;
 import java.awt.HeadlessException;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,10 +28,27 @@ public class RegularUserView extends JFrame{
 	private JTextField clientIdField;
 	private JTable clientTable;
 	
+	private JTable accTable;
+	
+	private JLabel lblType;
+	private JLabel lblBalance;
+	private JLabel lblNewLabel;
+	private JTextField typeField;
+	private JTextField balanceField;
+	private JTextField clientField;
+	private JTextField accIdField;
+	
+	private JButton addAccButton;
+	private JButton removeAccButton;
+	private JButton updateAccButton;
+	private JButton viewAccButton;
+
+	
+	
 	public RegularUserView() throws HeadlessException
 	{
 		setTitle("RegularUserOption");
-		setBounds(10,10,550,550);
+		setBounds(10,10,1000,550);
 		contentPane =new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -46,10 +64,11 @@ public class RegularUserView extends JFrame{
 		updateClientButton=new JButton("UpdateClient");
 		viewClientsButton = new JButton("View Clients");
 		clientTable=new JTable();
+		accTable=new JTable();
 		addClientButton.setBounds(10, 200, 90, 20);
-		removeClientButton.setBounds(120,200,120,20);
-		updateClientButton.setBounds(250,200,120,20);
-		viewClientsButton.setBounds(380,200 , 120, 20);
+		removeClientButton.setBounds(120,200,100,20);
+		updateClientButton.setBounds(250,200,100,20);
+		viewClientsButton.setBounds(380,200 , 100, 20);
 		contentPane.add(addClientButton);
 		contentPane.add(removeClientButton);
 		contentPane.add(updateClientButton);
@@ -95,6 +114,63 @@ public class RegularUserView extends JFrame{
 		contentPane.add(idCardField);
 		contentPane.add(persNrCodeField);
 		contentPane.add(address);
+		
+		lblType = new JLabel("Type");
+		lblType.setBounds(500, 23, 46, 14);
+		contentPane.add(lblType);
+		
+		lblBalance = new JLabel("Balance");
+		lblBalance.setBounds(500, 63, 46, 14);
+		contentPane.add(lblBalance);
+		
+		lblNewLabel = new JLabel("ClientId");
+		lblNewLabel.setBounds(500, 103, 46, 14);
+		contentPane.add(lblNewLabel);
+		
+		typeField = new JTextField();
+		typeField.setBounds(605, 20, 86, 20);
+		contentPane.add(typeField);
+		typeField.setColumns(10);
+		
+		balanceField = new JTextField();
+		balanceField.setBounds(605, 60, 86, 20);
+		contentPane.add(balanceField);
+		balanceField.setColumns(10);
+		
+		clientField = new JTextField();
+		clientField.setBounds(605, 100, 86, 20);
+		contentPane.add(clientField);
+		clientField.setColumns(10);
+		
+		accIdField = new JTextField();
+		accIdField.setBounds(746, 48, 86, 20);
+		contentPane.add(accIdField);
+		accIdField.setColumns(10);
+		
+		JLabel lblAccountIdDeletioncreation = new JLabel("Account id deletion/creation");
+		lblAccountIdDeletioncreation.setBounds(746, 23, 134, 14);
+		contentPane.add(lblAccountIdDeletioncreation);
+		
+		addAccButton=new JButton("AddAccount");
+		addAccButton.setBounds(500,200,110,20);
+		contentPane.add(addAccButton);
+		
+		removeAccButton=new JButton("RemoveAcc");
+		removeAccButton.setBounds(620,200,110,20);
+		contentPane.add(removeAccButton);
+		
+		updateAccButton=new JButton("UpdateAcc");
+		updateAccButton.setBounds(740,200,100,20);
+		contentPane.add(updateAccButton);
+		
+		viewAccButton=new JButton("ViewAccs");
+		viewAccButton.setBounds(850, 200, 100, 20);
+		contentPane.add(viewAccButton);
+		
+		JScrollPane scrollPanel1=new JScrollPane(accTable);
+		scrollPanel1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPanel1.setBounds(510,220,450,230);
+		contentPane.add(scrollPanel1);
 	}
 	public void setAddClientButtonListener(ActionListener addClientButtonListener)
 	{
@@ -112,9 +188,30 @@ public class RegularUserView extends JFrame{
 	{
 		viewClientsButton.addActionListener(viewClientsButtonListener);
 	}
+	
+	public void setAddAccountButtonListener(ActionListener addAccBtnListener)
+	{
+		addAccButton.addActionListener(addAccBtnListener);
+	}
+	public void setRemoveAccountButtonListener(ActionListener remAccbtnListener)
+	{
+		removeAccButton.addActionListener(remAccbtnListener);
+	}
+	public void setUpdateAccountButtonListener(ActionListener updateAccbtnListener)
+	{
+		updateAccButton.addActionListener(updateAccbtnListener);
+	}
+	public void setViewAccountButtonListener(ActionListener viewAccbtnListener)
+	{
+		viewAccButton.addActionListener(viewAccbtnListener);
+	}
 	public JTable getClientTable()
 	{
 		return clientTable;
+	}
+	public JTable getAccTable()
+	{
+		return accTable;
 	}
 	public String getNameField() {
 		return nameField.getText();
@@ -131,8 +228,18 @@ public class RegularUserView extends JFrame{
 	public String getClientIdField() {
 		return clientIdField.getText();
 	}
+	public String getAccIdField() {
+		return accIdField.getText();
+	}
 	
 	
-	
-
+	public String getTypeField() {
+		return typeField.getText();
+	}
+	public String getBalanceField() {
+		return balanceField.getText();
+	}
+	public String getClientField() {
+		return clientField.getText();
+	}
 }

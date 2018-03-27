@@ -18,6 +18,12 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public boolean addAccount(Account account) {
 		// TODO Auto-generated method stub
+		System.out.println("Hello from account service");
+		System.out.println(account.getBalance());
+		System.out.print(account.getType());
+		System.out.println(account.getClientId());
+		System.out.println(account.getId());
+		System.out.println(account.getDateOfCreation());
 		return accountRepository.addAccount(account);
 	}
 
@@ -44,6 +50,7 @@ public class AccountServiceImpl implements AccountService{
 		// TODO Auto-generated method stub
 		return accountRepository.findAllAccounts();
 	}
+	@Override
 	public DefaultTableModel fillAccountData()
 	{
 		DefaultTableModel tablemodel=new DefaultTableModel();
