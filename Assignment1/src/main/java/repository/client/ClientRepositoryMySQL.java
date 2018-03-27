@@ -52,6 +52,7 @@ public class ClientRepositoryMySQL implements ClientRepository{
 			updateStatement.setLong(2, client.getIdCardNr());
 			updateStatement.setLong(3, client.getPersNrCode());
 			updateStatement.setString(4, client.getAddress());
+			updateStatement.setInt(5, client.getId());
 			updateStatement.executeUpdate();
 			return true;
 		}

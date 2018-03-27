@@ -18,7 +18,7 @@ public class Constants {
     }
 
     public static class Tables {
-        public static final String BOOK = "book";
+        //public static final String BOOK = "book";
         public static final String ACCOUNT="account";
         public static final String CLIENT="client";
         public static final String USER = "user";
@@ -27,15 +27,15 @@ public class Constants {
         public static final String ROLE_RIGHT = "role_right";
         public static final String USER_ROLE = "user_role";
 
-        public static final String[] ORDERED_TABLES_FOR_CREATION = new String[]{USER, ROLE, RIGHT, ROLE_RIGHT, USER_ROLE, BOOK,CLIENT,ACCOUNT};
+        public static final String[] ORDERED_TABLES_FOR_CREATION = new String[]{USER, ROLE, RIGHT, ROLE_RIGHT, USER_ROLE,CLIENT,ACCOUNT};
     }
 
     public static class Roles {
         public static final String ADMINISTRATOR = "administrator";
         public static final String EMPLOYEE = "employee";
-        public static final String CUSTOMER = "customer";
+        //public static final String CUSTOMER = "customer";
 
-        public static final String[] ROLES = new String[]{ADMINISTRATOR, EMPLOYEE, CUSTOMER};
+        public static final String[] ROLES = new String[]{ADMINISTRATOR, EMPLOYEE};
     }
 
     public static class Rights {
@@ -57,16 +57,15 @@ public class Constants {
         public static final String TRANSFER_MONEY="transfer_money";
         public static final String GEN_REPORT="gen_report";
 
-        public static final String SELL_BOOK = "sell_book";
+        /*public static final String SELL_BOOK = "sell_book";
         public static final String BUY_BOOK = "buy_book";
-        public static final String RETURN_BOOK = "return_book";
+        public static final String RETURN_BOOK = "return_book";*/
         
-        public static final String CREATE_BOOK = "create_book";
+       /* public static final String CREATE_BOOK = "create_book";
         public static final String DELETE_BOOK = "delete_book";
-        public static final String UPDATE_BOOK = "update_book";
+        public static final String UPDATE_BOOK = "update_book";*/
 
-        public static final String[] RIGHTS = new String[]{CREATE_USER, DELETE_USER, UPDATE_USER, CREATE_BOOK, DELETE_BOOK, UPDATE_BOOK, SELL_BOOK, BUY_BOOK, RETURN_BOOK,
-        		CREATE_ACCOUNT,DELETE_ACCOUNT,UPDATE_ACCOUNT,VIEW_ACCOUNT,CREATE_CLIENT,DELETE_CLIENT,UPDATE_CLIENT,VIEW_CLIENT,PROCESS_BILL,TRANSFER_MONEY,GEN_REPORT};
+        public static final String[] RIGHTS = new String[]{CREATE_USER, DELETE_USER, UPDATE_USER,CREATE_ACCOUNT,DELETE_ACCOUNT,UPDATE_ACCOUNT,VIEW_ACCOUNT,CREATE_CLIENT,DELETE_CLIENT,UPDATE_CLIENT,VIEW_CLIENT,PROCESS_BILL,TRANSFER_MONEY,GEN_REPORT};
     }
 
     public static Map<String, List<String>> getRolesRights() {

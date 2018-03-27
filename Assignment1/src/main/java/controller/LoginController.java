@@ -16,13 +16,18 @@ import java.awt.event.ActionListener;
 public class LoginController {
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
+    
+    private RegularUserController regularUserController;
 
-    public LoginController(LoginView loginView, AuthenticationService authenticationService) {
+    public LoginController(LoginView loginView, AuthenticationService authenticationService, RegularUserController regularUserController) {
         this.loginView = loginView;
         this.authenticationService = authenticationService;
+        this.regularUserController=regularUserController;
         loginView.setLoginButtonListener(new LoginButtonListener());
         loginView.setRegisterButtonListener(new RegisterButtonListener());
     }
+    
+   
 
     private class LoginButtonListener implements ActionListener {
 

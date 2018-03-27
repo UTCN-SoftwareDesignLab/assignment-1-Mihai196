@@ -88,17 +88,17 @@ public class SQLTableCreationFactory {
                         "  id INT NOT NULL AUTO_INCREMENT," +
                         "  name VARCHAR(200) NOT NULL," +
                         "  idCardNR INT NOT NULL," +
-                        "  persNrCode INT NOT NULL"+
-                        "  address VARCHAR(200) NOT NULL"+
+                        "  persNrCode INT NOT NULL,"+
+                        "  address VARCHAR(200) NOT NULL,"+
                         "  PRIMARY KEY (id)," +
-                        "  UNIQUE INDEX id_UNIQUE (id ASC),";
+                        "  UNIQUE INDEX id_UNIQUE (id ASC));";
             case ACCOUNT:
             	return "\tCREATE TABLE IF NOT EXISTS account (" +
                 "  id INT NOT NULL AUTO_INCREMENT," +
                 "  type VARCHAR(200) NOT NULL," +
                 "  balance double NOT NULL," +
-                "  dateOfCreation datetime NOT NULL"+
-                "  clientId INT NOT NULL"+
+                "  dateOfCreation datetime NOT NULL,"+
+                "  clientId INT NOT NULL,"+
                 "  PRIMARY KEY (id)," +
                 "  CONSTRAINT client_fkid" +
                 "    FOREIGN KEY (clientId)" +
