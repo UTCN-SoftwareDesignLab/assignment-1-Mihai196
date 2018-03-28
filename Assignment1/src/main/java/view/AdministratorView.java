@@ -2,9 +2,12 @@ package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import java.awt.event.ActionListener;
 
@@ -23,6 +26,7 @@ public class AdministratorView extends JFrame{
 	private JTextField idField;
 	private JLabel lblRole;
 	private JTextField roleField;
+	private JTable usersTable;
 	
 	public void setAddUserButtonActionListener(ActionListener addButtonActionListener)
 	{
@@ -122,5 +126,14 @@ public class AdministratorView extends JFrame{
 		contentPane.add(roleField);
 		roleField.setColumns(10);
 		
+		usersTable=new JTable();
+		JScrollPane scrollPanel2 = new JScrollPane(usersTable);
+		scrollPanel2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPanel2.setBounds(10, 220, 450, 230);
+		contentPane.add(scrollPanel2);
+		
+	}
+	public JTable getUsersTable() {
+		return usersTable;
 	}
 }

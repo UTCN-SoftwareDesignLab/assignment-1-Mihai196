@@ -51,12 +51,16 @@ public class AccountRepositoryMySQL implements AccountRepository {
 		// TODO Auto-generated method stub
 		try 
 		{
-			PreparedStatement updateStatement=connection.prepareStatement("UPDATE account SET type=?,balance=?,dateOfCreation=?,clientId=? WHERE id=?");
+			System.out.print(account.getType());
+			System.out.println(account.getBalance());
+			System.out.println(account.getClientId());
+			System.out.println(account.getId());
+			PreparedStatement updateStatement=connection.prepareStatement("UPDATE account SET type=?,balance=?,clientId=? WHERE id=?");
 			updateStatement.setString(1, account.getType());
 			updateStatement.setDouble(2, account.getBalance());
-			updateStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-			updateStatement.setInt(4, account.getClientId());
-			updateStatement.setInt(5, account.getId());
+			//updateStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+			updateStatement.setInt(3, account.getClientId());
+			updateStatement.setInt(4, account.getId());
 			updateStatement.executeUpdate();
 			return true;
 		}

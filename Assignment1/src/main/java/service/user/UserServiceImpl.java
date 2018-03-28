@@ -56,11 +56,12 @@ public class UserServiceImpl implements UserService{
 		tablemodel.addColumn("Id");
 		tablemodel.addColumn("Username");
 		tablemodel.addColumn("Password");
+		tablemodel.addColumn("UserRole");
 		List<User> users=new ArrayList<User>();
 		users=userRepository.findAll();
 		for (User u: users)
 		{
-			tablemodel.addRow(new Object[]{u.getId(),u.getUsername(),u.getPassword()});
+			tablemodel.addRow(new Object[]{u.getId(),u.getUsername(),u.getPassword(),u.getRoles().get(0).getRole()});
 		}
 		return tablemodel;
 	}

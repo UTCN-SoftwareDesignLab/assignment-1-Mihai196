@@ -1,11 +1,14 @@
 package repository.user;
 
+import model.Account;
 import model.User;
+import model.builder.AccountBuilder;
 import model.builder.UserBuilder;
 import model.validation.Notification;
 import repository.security.RightsRolesRepository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static database.Constants.Tables.USER;
@@ -26,8 +29,32 @@ public class UserRepositoryMySQL implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return null;
+    	List<User> users=new ArrayList<>();
+		try 
+		{
+			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM user");
+			ResultSet rs=findStatement.executeQuery();
+			while(rs.next())
+			{
+				users.add(getUserFromResultSet(rs));
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return users;
     }
+    
+    private User getUserFromResultSet(ResultSet rs) throws SQLException  {
+		// TODO Auto-generated method stub
+    	long id=rs.getLong("id");
+		return new UserBuilder()
+				.setId(rs.getLong("id"))
+				.setUsername(rs.getString("username"))
+				.setRoles(rightsRolesRepository.findRolesForUser(id))
+				.setPassword(rs.getString("password")).build();
+	}
 
     @Override
     public Notification<User> findByUsernameAndPassword(String username, String password) throws AuthenticationException {
@@ -67,7 +94,8 @@ public class UserRepositoryMySQL implements UserRepository {
             rs.next();
             long userId = rs.getLong(1);
             user.setId(userId);
-
+            
+            System.out.println(user.getRoles().size());
             rightsRolesRepository.addRolesToUser(user, user.getRoles());
 
             return true;

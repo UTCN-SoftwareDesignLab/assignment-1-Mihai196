@@ -13,6 +13,8 @@ import service.client.ClientService;
 import service.client.ClientServiceImpl;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceMySQL;
+import service.user.UserService;
+import service.user.UserServiceImpl;
 
 import java.sql.Connection;
 
@@ -22,8 +24,9 @@ import java.sql.Connection;
 public class ComponentFactory {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
+    
     private final ClientService clientService;
-
     private final ClientRepository clientRepository;
     
     private final AccountRepository accRepository;
@@ -45,6 +48,7 @@ public class ComponentFactory {
         Connection connection = new DBConnectionFactory().getConnectionWrapper(componentsForTests).getConnection();
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+        this.userService = new UserServiceImpl(userRepository);
         this.authenticationService = new AuthenticationServiceMySQL(this.userRepository, this.rightsRolesRepository);
         this.clientRepository=new ClientRepositoryMySQL(connection);
         this.clientService=new ClientServiceImpl(clientRepository);
@@ -52,7 +56,11 @@ public class ComponentFactory {
         this.accService=new AccountServiceImpl(accRepository);
     }
 
-    public AuthenticationService getAuthenticationService() {
+    public UserService getUserService() {
+		return userService;
+	}
+
+	public AuthenticationService getAuthenticationService() {
         return authenticationService;
     }
 
