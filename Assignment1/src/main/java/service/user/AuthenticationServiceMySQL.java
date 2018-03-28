@@ -28,12 +28,12 @@ public class AuthenticationServiceMySQL implements AuthenticationService {
     }
 
     @Override
-    public Notification<Boolean> register(String username, String password) {
-        Role customerRole = rightsRolesRepository.findRoleByTitle(CUSTOMER);
+    public Notification<Boolean> register(String username, String password,String role) {
+        Role registeredRole = rightsRolesRepository.findRoleByTitle(role);
         User user = new UserBuilder()
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(Collections.singletonList(customerRole))
+                .setRoles(Collections.singletonList(registeredRole))
                 .build();
 
         UserValidator userValidator = new UserValidator(user);

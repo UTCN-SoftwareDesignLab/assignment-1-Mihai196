@@ -33,6 +33,10 @@ public class RegularUserController {
 		regularUserView.setViewAccountButtonListener(new ViewAccountButtonListener());
 		regularUserView.setRemoveAccountButtonListener(new RemoveAccountButtonListener());
 	}
+	public void setVisibilityforView()
+	{
+		regularUserView.setVisible(true);
+	}
 	private class RemoveAccountButtonListener implements ActionListener
 	{
 

@@ -89,5 +89,40 @@ public class UserRepositoryMySQL implements UserRepository {
         }
     }
 
+	@Override
+	public boolean removeUser(User user) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM user where id=?");
+			deleteStatement.setLong(1, user.getId());
+			deleteStatement.executeUpdate();
+			return true;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateUser(User user) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement updateStatement=connection.prepareStatement("UPDATE user SET username=?,password=? WHERE id=?");
+			updateStatement.setString(1, user.getUsername());
+			updateStatement.setString(2, user.getPassword());
+			updateStatement.executeUpdate();
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 
 }
