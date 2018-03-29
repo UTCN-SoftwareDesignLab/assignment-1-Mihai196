@@ -101,7 +101,6 @@ public class AccountServiceImpl implements AccountService{
 				.setDateOfCreation(a2.getDateOfCreation()).build();
 		accountRepository.updateAccount(updatedA1);
 		accountRepository.updateAccount(updatedA2);
-		JOptionPane.showMessageDialog(null, "Transfer between accounts was done succesfully");
 	}
 	
 	

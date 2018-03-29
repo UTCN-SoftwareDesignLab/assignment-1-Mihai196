@@ -12,6 +12,7 @@ import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
 import service.account.AccountService;
 import service.client.ClientService;
+import view.LoginView;
 import view.RegularUserView;
 
 public class RegularUserController {
@@ -19,12 +20,14 @@ public class RegularUserController {
 	private RegularUserView regularUserView;
 	private ClientService clientService;
 	private AccountService accountService;
+	private LoginView loginView;
 
-	public RegularUserController(ClientService clientService, AccountService accountService) {
+	public RegularUserController(ClientService clientService, AccountService accountService,RegularUserView regularUserView,LoginView loginView ) {
 		super();
-		this.regularUserView = new RegularUserView();
+		this.regularUserView =regularUserView;
 		this.clientService = clientService;
 		this.accountService = accountService;
+		this.loginView=loginView;
 		regularUserView.setAddClientButtonListener(new AddClientButtonListener());
 		regularUserView.setRemoveClientButtonListener(new RemoveClientButtonListener());
 		regularUserView.setUpdateClientButtonListener(new UpdateClientButtonListener());
@@ -34,6 +37,21 @@ public class RegularUserController {
 		regularUserView.setRemoveAccountButtonListener(new RemoveAccountButtonListener());
 		regularUserView.setUpdateAccountButtonListener(new UpdateAccountButtonListener());
 		regularUserView.setTransferButtonListener(new transferButtonListener());
+		regularUserView.setLogOutButtonListener(new LogOutButtonListener());
+	}
+	private class LogOutButtonListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			loginView.setVisible(true);
+			regularUserView.setVisible(false);
+			loginView.getTfUsername().setText("");
+			loginView.getTfPassword().setText("");
+			
+		}
+		
 	}
 	private class transferButtonListener implements ActionListener
 	{
@@ -47,6 +65,7 @@ public class RegularUserController {
 				int id2=Integer.parseInt(regularUserView.getIDAcc2Field().getText());
 				double sum=Double.parseDouble(regularUserView.getSumField().getText());
 				accountService.transferMoney(id1, id2, sum);
+				JOptionPane.showMessageDialog(null, "Transfer between accounts was done succesfully");
 			}
 			catch(Exception e)
 			{
@@ -74,6 +93,8 @@ public class RegularUserController {
 				//System.out.println(clientId);
 				int id = Integer.parseInt(regularUserView.getAccIdField());
 				accountService.updateAccount(type,balance,clientId,id);
+				JOptionPane.showMessageDialog(null,
+						"Account data for account with id " + id + " were updated succesfully to the database");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -96,6 +117,8 @@ public class RegularUserController {
 			try {
 				int id = Integer.parseInt(regularUserView.getAccIdField());
 				accountService.deleteAccount(id);
+				JOptionPane.showMessageDialog(null,
+						"Account with id " + id + " was deleted succesfully from the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -136,6 +159,8 @@ public class RegularUserController {
 				int clientId = Integer.parseInt(regularUserView.getClientField());
 				//System.out.println(clientId);
 				accountService.addAccount(type,balance,clientId);
+				JOptionPane.showMessageDialog(null,
+						"Account for client with id" + clientId + "was added succesfully to the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -176,6 +201,8 @@ public class RegularUserController {
 				String address = regularUserView.getAddress();
 
 				clientService.addClient(name,idCardNr,persNrCode,address);
+				JOptionPane.showMessageDialog(null,
+						"Client with the name " + name + " was added succesfully to the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -193,6 +220,8 @@ public class RegularUserController {
 			try {
 				int id = Integer.parseInt(regularUserView.getClientIdField());
 				clientService.deleteClient(id);
+				JOptionPane.showMessageDialog(null,
+						"Client with the Id " +id + " was deleted succesfully from the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -216,6 +245,8 @@ public class RegularUserController {
 				String address = regularUserView.getAddress();
 				int id = Integer.parseInt(regularUserView.getClientIdField());
 				clientService.updateClient(id,name,idCardNr,persNrCode,address);
+				JOptionPane.showMessageDialog(null,
+						"Client data for client " + name + " were updated succesfully to the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,

@@ -32,8 +32,7 @@ public class AccountRepositoryMySQL implements AccountRepository {
 			insertStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			insertStatement.setInt(4, account.getClientId());
 			insertStatement.executeUpdate();
-			JOptionPane.showMessageDialog(null,
-					"Account for client with id" + account.getClientId() + "was added succesfully to the database");
+			
 			return true;
 		}
 		catch (SQLException e)
@@ -56,8 +55,7 @@ public class AccountRepositoryMySQL implements AccountRepository {
 			updateStatement.setInt(3, account.getClientId());
 			updateStatement.setInt(4, account.getId());
 			updateStatement.executeUpdate();
-			JOptionPane.showMessageDialog(null,
-					"Account data for account with id " + account.getId() + " were updated succesfully to the database");
+			
 			return true;
 		}
 		catch (SQLException e)
@@ -76,8 +74,6 @@ public class AccountRepositoryMySQL implements AccountRepository {
 			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM account where id=?");
 			deleteStatement.setInt(1, account.getId());
 			deleteStatement.executeUpdate();
-			JOptionPane.showMessageDialog(null,
-					"Account with id " + account.getId() + " was deleted succesfully from the database");
 			return true;
 			
 		}

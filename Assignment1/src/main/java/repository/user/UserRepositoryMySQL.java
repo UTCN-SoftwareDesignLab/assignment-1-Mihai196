@@ -127,7 +127,6 @@ public class UserRepositoryMySQL implements UserRepository {
 			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM user where id=?");
 			deleteStatement.setLong(1, user.getId());
 			deleteStatement.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Deletion of the user was performed succesfully");
 			return true;
 		}
 		catch (Exception e)

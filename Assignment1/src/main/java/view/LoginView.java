@@ -13,10 +13,19 @@ public class LoginView extends JFrame {
 
     private JTextField tfUsername;
     private JTextField tfPassword;
-    private JButton btnLogin;
+    public JTextField getTfUsername() {
+		return tfUsername;
+	}
+
+	public JTextField getTfPassword() {
+		return tfPassword;
+	}
+
+	private JButton btnLogin;
     //private JButton btnRegister;
 
     public LoginView() throws HeadlessException {
+    	setTitle("LoginFrame");
         setSize(300, 300);
         setLocationRelativeTo(null);
         initializeFields();

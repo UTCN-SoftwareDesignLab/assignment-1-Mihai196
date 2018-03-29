@@ -27,6 +27,7 @@ public class AdministratorView extends JFrame{
 	private JLabel lblRole;
 	private JTextField roleField;
 	private JTable usersTable;
+	private JButton btnNewButton;
 	
 	public void setAddUserButtonActionListener(ActionListener addButtonActionListener)
 	{
@@ -132,6 +133,14 @@ public class AdministratorView extends JFrame{
 		scrollPanel2.setBounds(10, 220, 450, 230);
 		contentPane.add(scrollPanel2);
 		
+		btnNewButton = new JButton("LogOut");
+		btnNewButton.setBounds(342, 461, 118, 39);
+		contentPane.add(btnNewButton);
+		
+	}
+	public void setBtnNewButtonActionListener(ActionListener logoutListener)
+	{
+		btnNewButton.addActionListener(logoutListener);
 	}
 	public JTable getUsersTable() {
 		return usersTable;

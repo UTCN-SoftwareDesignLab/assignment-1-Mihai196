@@ -46,6 +46,9 @@ public class RegularUserView extends JFrame {
 	private JTextField IDAcc2Field;
 	private JTextField SumField;
 	private JButton btnTransfer;
+	private JButton LogOutButton;
+	
+	
 
 	public RegularUserView() throws HeadlessException {
 		setTitle("RegularUserOption");
@@ -206,10 +209,18 @@ public class RegularUserView extends JFrame {
 		btnTransfer = new JButton("Transfer");
 		btnTransfer.setBounds(743, 166, 89, 23);
 		contentPane.add(btnTransfer);
+		
+		LogOutButton = new JButton("LogOut");
+		LogOutButton.setBounds(850, 461, 110, 39);
+		contentPane.add(LogOutButton);
 	}
 	public void setTransferButtonListener(ActionListener transferButtonListener)
 	{
 		btnTransfer.addActionListener(transferButtonListener);
+	}
+	public void setLogOutButtonListener(ActionListener transferButtonListener)
+	{
+		LogOutButton.addActionListener(transferButtonListener);
 	}
 
 	public void setAddClientButtonListener(ActionListener addClientButtonListener) {
