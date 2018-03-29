@@ -31,6 +31,7 @@ public class LoginView extends JFrame {
 
     private void initializeFields() {
         tfUsername = new JTextField();
+        tfUsername.setBounds(15, 50, 100, 30);
         tfPassword = new JTextField();
         btnLogin = new JButton("Login");
         //btnRegister = new JButton("Register");

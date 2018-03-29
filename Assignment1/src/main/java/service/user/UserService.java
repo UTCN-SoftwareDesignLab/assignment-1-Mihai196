@@ -14,7 +14,7 @@ public interface UserService {
 
 	void removeAll();
 
-	boolean removeUser(User user);
+	boolean removeUser(Long id);
 
 	boolean updateUser(User user);
 	

@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 import model.Account;
 import model.User;
+import model.builder.UserBuilder;
 import repository.user.UserRepository;
 
 public class UserServiceImpl implements UserService{
@@ -38,9 +39,10 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean removeUser(User user) {
+	public boolean removeUser(Long id) {
 		// TODO Auto-generated method stub
-		return userRepository.removeUser(user);
+		User u=new UserBuilder().setId(id).build();
+		return userRepository.removeUser(u);
 	}
 
 	@Override

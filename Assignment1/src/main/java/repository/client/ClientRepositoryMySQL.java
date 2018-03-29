@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import model.Client;
 import model.builder.ClientBuilder;
 
@@ -32,6 +34,8 @@ public class ClientRepositoryMySQL implements ClientRepository{
 			insertStatement.setLong(3, client.getPersNrCode());
 			insertStatement.setString(4,client.getAddress());
 			insertStatement.executeUpdate();
+			JOptionPane.showMessageDialog(null,
+					"Client with the name " + client.getName() + " was added succesfully to the database");
 			return true;
 		}
 		catch (SQLException e)
@@ -54,6 +58,8 @@ public class ClientRepositoryMySQL implements ClientRepository{
 			updateStatement.setString(4, client.getAddress());
 			updateStatement.setInt(5, client.getId());
 			updateStatement.executeUpdate();
+			JOptionPane.showMessageDialog(null,
+					"Client data for client " + client.getName() + " were updated succesfully to the database");
 			return true;
 		}
 		catch (SQLException e)
@@ -72,6 +78,8 @@ public class ClientRepositoryMySQL implements ClientRepository{
 			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM client where id=?");
 			deleteStatement.setInt(1, client.getId());
 			deleteStatement.executeUpdate();
+			JOptionPane.showMessageDialog(null,
+					"Client with the Id " + client.getId() + " was deleted succesfully from the database");
 			return true;
 			
 		}

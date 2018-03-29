@@ -2,6 +2,10 @@ package database;
 
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
+import repository.user.UserRepository;
+import repository.user.UserRepositoryMySQL;
+import service.user.AuthenticationService;
+import service.user.AuthenticationServiceMySQL;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,6 +13,8 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import model.validation.Notification;
 
 import static database.Constants.Rights.RIGHTS;
 import static database.Constants.Roles.ROLES;
@@ -21,6 +27,7 @@ import static database.Constants.getRolesRights;
 public class Boostrap {
 
     private static RightsRolesRepository rightsRolesRepository;
+    private static UserRepository userRepository;
 
     public static void main(String[] args) throws SQLException {
         dropAll();
@@ -44,7 +51,7 @@ public class Boostrap {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
-                    "DROP TABLE  `account`,`client`, `role`, `user`;"
+                    "DROP TABLE  `account`,`client`,`bill`, `role`, `user`;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {
@@ -86,7 +93,19 @@ public class Boostrap {
 
             JDBConnectionWrapper connectionWrapper = new JDBConnectionWrapper(schema);
             rightsRolesRepository = new RightsRolesRepositoryMySQL(connectionWrapper.getConnection());
-
+            //userRepository = new UserRepositoryMySQL(connectionWrapper.getConnection(), rightsRolesRepository);
+            //AuthenticationService authenticationService = new AuthenticationServiceMySQL(userRepository, rightsRolesRepository);
+            
+            /*Notification<Boolean> regNotification=authenticationService.register("default@yahoo.com", "parola123!", Constants.Roles.ADMINISTRATOR);
+            if (regNotification.hasErrors())
+            {
+            	System.out.println(regNotification.getFormattedErrors());
+            }
+            else
+            {
+            	System.out.println("A default administrator was created");
+            }*/
+            
             bootstrapRoles();
             bootstrapRights();
             bootstrapRoleRight();

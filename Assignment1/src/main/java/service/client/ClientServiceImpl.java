@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import model.Client;
+import model.builder.ClientBuilder;
 import repository.client.ClientRepository;
 
 public class ClientServiceImpl implements ClientService {
@@ -17,21 +18,26 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public boolean addClient(Client client) {
+	public boolean addClient(String name,Long idCardNr,Long persNrCode,String address) {
 		// TODO Auto-generated method stub
-		return clientRepository.addClient(client);
+		Client c = new ClientBuilder().setName(name).setIdCardNr(idCardNr).setPersNrCode(persNrCode)
+				.setAddress(address).build();
+		return clientRepository.addClient(c);
 	}
 
 	@Override
-	public boolean updateClient(Client client) {
+	public boolean updateClient(int id,String name,Long idCardNr,Long persNrCode,String address) {
 		// TODO Auto-generated method stub
-		return clientRepository.updateClient(client);
+		Client c = new ClientBuilder().setName(name).setIdCardNr(idCardNr).setPersNrCode(persNrCode).setId(id)
+				.setAddress(address).build();
+		return clientRepository.updateClient(c);
 	}
 
 	@Override
-	public boolean deleteClient(Client client) {
+	public boolean deleteClient(int id) {
 		// TODO Auto-generated method stub
-		return clientRepository.deleteClient(client);
+		Client c = new ClientBuilder().setId(id).build();
+		return clientRepository.deleteClient(c);
 	}
 
 	@Override

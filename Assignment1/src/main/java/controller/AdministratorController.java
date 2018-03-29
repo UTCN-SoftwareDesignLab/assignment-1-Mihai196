@@ -38,10 +38,7 @@ public class AdministratorController {
 			try
 			{
 				long id=Integer.parseInt(administratorView.getIdField().getText());
-				User u=new UserBuilder().setId(id).build();
-				userService.removeUser(u);
-				JOptionPane.showMessageDialog(null, "Deletion of the user was performed succesfully");
-				
+				userService.removeUser(id);
 			}
 			catch(Exception e)
 			{

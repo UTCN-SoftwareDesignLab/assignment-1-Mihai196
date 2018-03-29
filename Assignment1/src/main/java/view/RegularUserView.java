@@ -42,6 +42,10 @@ public class RegularUserView extends JFrame {
 	private JButton removeAccButton;
 	private JButton updateAccButton;
 	private JButton viewAccButton;
+	private JTextField IdAcc1Field;
+	private JTextField IDAcc2Field;
+	private JTextField SumField;
+	private JButton btnTransfer;
 
 	public RegularUserView() throws HeadlessException {
 		setTitle("RegularUserOption");
@@ -167,6 +171,45 @@ public class RegularUserView extends JFrame {
 		scrollPanel1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPanel1.setBounds(510, 220, 450, 230);
 		contentPane.add(scrollPanel1);
+		
+		JLabel lblTransferMoneyBetween = new JLabel("Transfer Money between 2 accounts");
+		lblTransferMoneyBetween.setBounds(746, 103, 176, 14);
+		contentPane.add(lblTransferMoneyBetween);
+		
+		JLabel lblIdacc = new JLabel("IDAcc1");
+		lblIdacc.setBounds(705, 143, 46, 14);
+		contentPane.add(lblIdacc);
+		
+		IdAcc1Field = new JTextField();
+		IdAcc1Field.setBounds(746, 140, 34, 20);
+		contentPane.add(IdAcc1Field);
+		IdAcc1Field.setColumns(10);
+		
+		JLabel lblIdacc_1 = new JLabel("IDAcc2");
+		lblIdacc_1.setBounds(790, 143, 46, 14);
+		contentPane.add(lblIdacc_1);
+		
+		IDAcc2Field = new JTextField();
+		IDAcc2Field.setBounds(833, 140, 34, 20);
+		contentPane.add(IDAcc2Field);
+		IDAcc2Field.setColumns(10);
+		
+		JLabel lblSum = new JLabel("Sum");
+		lblSum.setBounds(872, 143, 46, 14);
+		contentPane.add(lblSum);
+		
+		SumField = new JTextField();
+		SumField.setBounds(898, 140, 34, 20);
+		contentPane.add(SumField);
+		SumField.setColumns(10);
+	    
+		btnTransfer = new JButton("Transfer");
+		btnTransfer.setBounds(743, 166, 89, 23);
+		contentPane.add(btnTransfer);
+	}
+	public void setTransferButtonListener(ActionListener transferButtonListener)
+	{
+		btnTransfer.addActionListener(transferButtonListener);
 	}
 
 	public void setAddClientButtonListener(ActionListener addClientButtonListener) {
@@ -199,6 +242,18 @@ public class RegularUserView extends JFrame {
 
 	public void setViewAccountButtonListener(ActionListener viewAccbtnListener) {
 		viewAccButton.addActionListener(viewAccbtnListener);
+	}
+	
+	public JTextField getIdAcc1Field() {
+		return IdAcc1Field;
+	}
+
+	public JTextField getIDAcc2Field() {
+		return IDAcc2Field;
+	}
+
+	public JTextField getSumField() {
+		return SumField;
 	}
 
 	public JTable getClientTable() {

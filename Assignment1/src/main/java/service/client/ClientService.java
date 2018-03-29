@@ -8,9 +8,9 @@ import model.Client;
 
 public interface ClientService {
 	
-	boolean addClient(Client client);
-	boolean updateClient(Client client);
-	boolean deleteClient(Client client);
+	boolean addClient(String name,Long idCardNr,Long persNrCode,String address);
+	boolean updateClient(int id,String name,Long idCardNr,Long persNrCode,String address);
+	boolean deleteClient(int id);
 	Client findById(int id);
 	List<Client> findAllClients();
 	DefaultTableModel fillClientData();

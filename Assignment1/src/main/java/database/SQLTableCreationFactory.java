@@ -105,6 +105,19 @@ public class SQLTableCreationFactory {
                 "    REFERENCES client (id)" +
                 "    ON DELETE CASCADE" +
                 "    ON UPDATE CASCADE);";
+            
+            case BILL:
+            	return "\tCREATE TABLE IF NOT EXISTS bill ("+
+            	" id INT NOT NULL AUTO_INCREMENT," +
+            	" sumToPay DOUBLE NOT NULL,"+
+            	" company VARCHAR(200) NOT NULL,"+
+            	" clientId INT NOT NULL,"+
+            	" PRIMARY KEY (id),"+
+            	" CONSTRAINT client_fkidd" +
+            	"	FOREIGN KEY(clientId)"+
+            	" 	REFERENCES client (id)"+
+            	" 	ON DELETE CASCADE"+
+            	" 	ON UPDATE CASCADE);";
 
             default:
                 return "";

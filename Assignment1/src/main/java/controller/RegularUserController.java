@@ -33,6 +33,30 @@ public class RegularUserController {
 		regularUserView.setViewAccountButtonListener(new ViewAccountButtonListener());
 		regularUserView.setRemoveAccountButtonListener(new RemoveAccountButtonListener());
 		regularUserView.setUpdateAccountButtonListener(new UpdateAccountButtonListener());
+		regularUserView.setTransferButtonListener(new transferButtonListener());
+	}
+	private class transferButtonListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try
+			{
+				int id1=Integer.parseInt(regularUserView.getIdAcc1Field().getText());
+				int id2=Integer.parseInt(regularUserView.getIDAcc2Field().getText());
+				double sum=Double.parseDouble(regularUserView.getSumField().getText());
+				accountService.transferMoney(id1, id2, sum);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "An error occured when trying to do the transfer.Please"
+						+ " make sure you give valid ids and sums of the correct types");
+			}
+			
+		}
+		
 	}
 
 	private class UpdateAccountButtonListener implements ActionListener {
@@ -47,12 +71,9 @@ public class RegularUserController {
 				double balance = Double.parseDouble(regularUserView.getBalanceField());
 
 				int clientId = Integer.parseInt(regularUserView.getClientField());
-				System.out.println(clientId);
+				//System.out.println(clientId);
 				int id = Integer.parseInt(regularUserView.getAccIdField());
-				Account a = new AccountBuilder().setType(type).setBalance(balance).setClientId(clientId).setId(id).build();
-				accountService.updateAccount(a);
-				JOptionPane.showMessageDialog(null,
-						"Account data for account with id " + id + "were updated succesfully to the database");
+				accountService.updateAccount(type,balance,clientId,id);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -74,10 +95,7 @@ public class RegularUserController {
 			// TODO Auto-generated method stub
 			try {
 				int id = Integer.parseInt(regularUserView.getAccIdField());
-				Account a = new AccountBuilder().setId(id).build();
-				accountService.deleteAccount(a);
-				JOptionPane.showMessageDialog(null,
-						"Account with id " + id + " was deleted succesfully from the database");
+				accountService.deleteAccount(id);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -112,25 +130,12 @@ public class RegularUserController {
 
 			try {
 				String type = regularUserView.getTypeField();
-				System.out.println("The type is" + type);
+				//System.out.println("The type is" + type);
 				double balance = Double.parseDouble(regularUserView.getBalanceField());
-				System.out.println("The balance is" + balance);
+				//System.out.println("The balance is" + balance);
 				int clientId = Integer.parseInt(regularUserView.getClientField());
-				System.out.println(clientId);
-				Account a = new AccountBuilder().setType(type).setBalance(balance).setClientId(clientId).build();
-				System.out.println("Hello from regular user controller");
-				System.out.println("Hello from account repository");
-				System.out.println(a.getBalance());
-				System.out.print(a.getType());
-				System.out.println(a.getClientId());
-				System.out.println(a.getId());
-				System.out.println(a.getDateOfCreation());
-				if (accountService != null) {
-					System.out.println("Service working perfectly");
-				}
-				accountService.addAccount(a);
-				JOptionPane.showMessageDialog(null,
-						"Account for client with id" + clientId + "was added succesfully to the database");
+				//System.out.println(clientId);
+				accountService.addAccount(type,balance,clientId);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -170,11 +175,7 @@ public class RegularUserController {
 				Long persNrCode = Long.parseLong(regularUserView.getPersNrCodeField());
 				String address = regularUserView.getAddress();
 
-				Client c = new ClientBuilder().setName(name).setIdCardNr(idCardNr).setPersNrCode(persNrCode)
-						.setAddress(address).build();
-				clientService.addClient(c);
-				JOptionPane.showMessageDialog(null,
-						"Client with the name " + name + "was added succesfully to the database");
+				clientService.addClient(name,idCardNr,persNrCode,address);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -191,11 +192,7 @@ public class RegularUserController {
 			// TODO Auto-generated method stub
 			try {
 				int id = Integer.parseInt(regularUserView.getClientIdField());
-
-				Client c = new ClientBuilder().setId(id).build();
-				clientService.deleteClient(c);
-				JOptionPane.showMessageDialog(null,
-						"Client with the Id " + id + "was deleted succesfully from the database");
+				clientService.deleteClient(id);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -218,12 +215,7 @@ public class RegularUserController {
 				Long persNrCode = Long.parseLong(regularUserView.getPersNrCodeField());
 				String address = regularUserView.getAddress();
 				int id = Integer.parseInt(regularUserView.getClientIdField());
-
-				Client c = new ClientBuilder().setName(name).setIdCardNr(idCardNr).setPersNrCode(persNrCode).setId(id)
-						.setAddress(address).build();
-				clientService.updateClient(c);
-				JOptionPane.showMessageDialog(null,
-						"Client data for client " + name + "were updated succesfully to the database");
+				clientService.updateClient(id,name,idCardNr,persNrCode,address);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
