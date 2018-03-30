@@ -11,7 +11,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import model.Account;
+import model.Bill;
 import model.builder.AccountBuilder;
+import model.builder.BillBuilder;
 
 public class AccountRepositoryMySQL implements AccountRepository {
 	
@@ -138,7 +140,74 @@ public class AccountRepositoryMySQL implements AccountRepository {
 		}
 		return accounts;
 	}
-	
-	
 
+	@Override
+	public Bill findBillById(int id) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM bill where id=?");
+			findStatement.setInt(1, id);
+			ResultSet rs=findStatement.executeQuery();
+			if (rs.next())
+			{
+				return getBillFromResultSet(rs);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private Bill getBillFromResultSet(ResultSet rs) throws SQLException {
+		return new BillBuilder()
+				.setId(rs.getInt("id"))
+				.setCompany(rs.getString("company"))
+				.setSumToPay(rs.getDouble("sumToPay"))
+				.setClientId(rs.getInt("clientId")).build();
+	}
+
+	@Override
+	public boolean deleteBill(Bill bill) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM bill where id=?");
+			deleteStatement.setInt(1, bill.getId());
+			deleteStatement.executeUpdate();
+			return true;
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<Bill> findAllBills() {
+		// TODO Auto-generated method stub
+		List<Bill> bills=new ArrayList<>();
+		try 
+		{
+			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM bill");
+			ResultSet rs=findStatement.executeQuery();
+			while(rs.next())
+			{
+				bills.add(getBillFromResultSet(rs));
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return bills;
+	}
 }

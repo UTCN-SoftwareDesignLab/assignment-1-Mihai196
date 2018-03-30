@@ -47,12 +47,18 @@ public class RegularUserView extends JFrame {
 	private JTextField SumField;
 	private JButton btnTransfer;
 	private JButton LogOutButton;
+	private JButton btnViewbills;
+	private JTable billsTable;
+	private JTextField BillId;
+	private JTextField accountIdBill;
+	
+	private JButton btnPaybill;
 	
 	
 
 	public RegularUserView() throws HeadlessException {
 		setTitle("RegularUserOption");
-		setBounds(10, 10, 1000, 550);
+		setBounds(10, 10, 1350, 550);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -68,6 +74,7 @@ public class RegularUserView extends JFrame {
 		viewClientsButton = new JButton("View Clients");
 		clientTable = new JTable();
 		accTable = new JTable();
+		billsTable=new JTable();
 		addClientButton.setBounds(10, 200, 90, 20);
 		removeClientButton.setBounds(120, 200, 100, 20);
 		updateClientButton.setBounds(250, 200, 100, 20);
@@ -81,6 +88,11 @@ public class RegularUserView extends JFrame {
 		scrollPanel2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPanel2.setBounds(10, 220, 450, 230);
 		contentPane.add(scrollPanel2);
+		
+		JScrollPane scrollPanel3 = new JScrollPane(billsTable);
+		scrollPanel3.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPanel3.setBounds(1000, 220, 300, 230);
+		contentPane.add(scrollPanel3);
 
 		JLabel labelName = new JLabel("Name");
 		labelName.setBounds(30, 20, 60, 20);
@@ -211,8 +223,42 @@ public class RegularUserView extends JFrame {
 		contentPane.add(btnTransfer);
 		
 		LogOutButton = new JButton("LogOut");
-		LogOutButton.setBounds(850, 461, 110, 39);
+		LogOutButton.setBounds(1242, 461, 110, 39);
 		contentPane.add(LogOutButton);
+		
+		btnViewbills = new JButton("ViewBills");
+		btnViewbills.setBounds(1023, 166, 89, 23);
+		contentPane.add(btnViewbills);
+		
+		JLabel lblIdForBill = new JLabel("Id for Bill you want to Pay");
+		lblIdForBill.setBounds(1022, 19, 150, 23);
+		contentPane.add(lblIdForBill);
+		
+		BillId = new JTextField();
+		BillId.setBounds(1074, 48, 86, 20);
+		contentPane.add(BillId);
+		BillId.setColumns(10);
+		
+		JLabel lblAccountIdFrom = new JLabel("Account id from which you wan to pay");
+		lblAccountIdFrom.setBounds(1025, 79, 196, 14);
+		contentPane.add(lblAccountIdFrom);
+		
+		accountIdBill = new JTextField();
+		accountIdBill.setBounds(1074, 100, 86, 20);
+		contentPane.add(accountIdBill);
+		accountIdBill.setColumns(10);
+		
+		btnPaybill = new JButton("PayBill");
+		btnPaybill.setBounds(1023, 132, 89, 23);
+		contentPane.add(btnPaybill);
+	}
+	public void setBtnPayBillActionListener (ActionListener btnPayBIllActionListenr)
+	{
+		btnPaybill.addActionListener(btnPayBIllActionListenr);
+	}
+	public void setBtnViewBillsActionListener(ActionListener btnViewBillsActionListener)
+	{
+		btnViewbills.addActionListener(btnViewBillsActionListener);
 	}
 	public void setTransferButtonListener(ActionListener transferButtonListener)
 	{
@@ -274,6 +320,10 @@ public class RegularUserView extends JFrame {
 	public JTable getAccTable() {
 		return accTable;
 	}
+	public JTable getBillsTable()
+	{
+		return billsTable;
+	}
 
 	public String getNameField() {
 		return nameField.getText();
@@ -309,5 +359,13 @@ public class RegularUserView extends JFrame {
 
 	public String getClientField() {
 		return clientField.getText();
+	}
+
+	public JTextField getBillId() {
+		return BillId;
+	}
+
+	public JTextField getAccountIdBill() {
+		return accountIdBill;
 	}
 }

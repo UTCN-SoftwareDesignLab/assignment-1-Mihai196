@@ -2,14 +2,18 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import model.Account;
+import model.Bill;
 import model.Client;
 import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
+import model.validation.Notification;
 import service.account.AccountService;
 import service.client.ClientService;
 import view.LoginView;
@@ -38,6 +42,65 @@ public class RegularUserController {
 		regularUserView.setUpdateAccountButtonListener(new UpdateAccountButtonListener());
 		regularUserView.setTransferButtonListener(new transferButtonListener());
 		regularUserView.setLogOutButtonListener(new LogOutButtonListener());
+		regularUserView.setBtnViewBillsActionListener(new btnViewBillsActionListener());
+		regularUserView.setBtnPayBillActionListener(new btnPayBillActionListener());
+	}
+	private class btnPayBillActionListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try
+			{
+				int billId=Integer.parseInt(regularUserView.getBillId().getText());
+				int accBillId=Integer.parseInt(regularUserView.getAccountIdBill().getText());
+				Bill bill=accountService.findBillById(billId);
+				List<String> errors=accountService.processBill(billId, accBillId);
+				Client client=clientService.findById(bill.getClientId());
+				Account account=accountService.findById(accBillId);
+				if (errors.isEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "The process of the bill with id "+billId+ " was done successfully.Receipt generated");
+					String text1="S.C. "+bill.getCompany()+" S.R.L. \n";
+					String text2="Receipt for the bill with id "+bill.getId()+" was paid at the date "+System.currentTimeMillis();
+					String text3="Client : "+client.getName() + " having the personal numerical code "+ client.getPersNrCode();
+					String text4="Total amount paid " + bill.getSumToPay() + " dollars $";
+					String text=text1+"\n"+text2+"\n"+text3+text4;
+					try (PrintWriter out = new PrintWriter("ReceiptBill.txt")) {
+					    out.println(text);
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, errors);
+				}
+				
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "An error occured. Please make sure you give the requested fields with the right types");
+			}
+		}
+		
+	}
+	private class btnViewBillsActionListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try {
+				DefaultTableModel tablemodel = accountService.fillBillData();
+				regularUserView.getBillsTable().setModel(tablemodel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
 	}
 	private class LogOutButtonListener implements ActionListener
 	{
@@ -64,8 +127,15 @@ public class RegularUserController {
 				int id1=Integer.parseInt(regularUserView.getIdAcc1Field().getText());
 				int id2=Integer.parseInt(regularUserView.getIDAcc2Field().getText());
 				double sum=Double.parseDouble(regularUserView.getSumField().getText());
-				accountService.transferMoney(id1, id2, sum);
+				Notification<Boolean> transferNotification=accountService.transferMoney(id1, id2, sum);
+				if (transferNotification.hasErrors())
+				{
+					JOptionPane.showMessageDialog(null, transferNotification.getFormattedErrors());
+				}
+				else
+				{
 				JOptionPane.showMessageDialog(null, "Transfer between accounts was done succesfully");
+				}
 			}
 			catch(Exception e)
 			{
