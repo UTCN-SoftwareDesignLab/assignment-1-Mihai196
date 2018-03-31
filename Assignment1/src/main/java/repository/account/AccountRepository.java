@@ -15,5 +15,4 @@ public interface AccountRepository {
 	List<Account> findAllAccounts();
 	Bill findBillById(int id);
 	boolean deleteBill(Bill bill);
-	List<Bill> findAllBills();
 }

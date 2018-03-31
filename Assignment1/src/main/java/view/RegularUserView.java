@@ -53,6 +53,26 @@ public class RegularUserView extends JFrame {
 	private JTextField accountIdBill;
 	
 	private JButton btnPaybill;
+	private JLabel lblNewLabel_1;
+	private JTextField sumToPayBill;
+	private JLabel lblNewLabel_2;
+	private JTextField CompanyBill;
+	private JLabel lblNewLabel_3;
+	private JTextField ClientIdBill;
+	
+	public JTextField getSumToPayBill() {
+		return sumToPayBill;
+	}
+
+	public JTextField getCompanyBill() {
+		return CompanyBill;
+	}
+
+	public JTextField getClientIdBill() {
+		return ClientIdBill;
+	}
+
+	private JButton btnAddbill;
 	
 	
 
@@ -227,30 +247,65 @@ public class RegularUserView extends JFrame {
 		contentPane.add(LogOutButton);
 		
 		btnViewbills = new JButton("ViewBills");
-		btnViewbills.setBounds(1023, 166, 89, 23);
+		btnViewbills.setBounds(1000, 166, 89, 23);
 		contentPane.add(btnViewbills);
 		
 		JLabel lblIdForBill = new JLabel("Id for Bill you want to Pay");
-		lblIdForBill.setBounds(1022, 19, 150, 23);
+		lblIdForBill.setBounds(1000, 19, 150, 23);
 		contentPane.add(lblIdForBill);
 		
 		BillId = new JTextField();
-		BillId.setBounds(1074, 48, 86, 20);
+		BillId.setBounds(1032, 48, 86, 20);
 		contentPane.add(BillId);
 		BillId.setColumns(10);
 		
-		JLabel lblAccountIdFrom = new JLabel("Account id from which you wan to pay");
-		lblAccountIdFrom.setBounds(1025, 79, 196, 14);
+		JLabel lblAccountIdFrom = new JLabel("Account id for payment");
+		lblAccountIdFrom.setBounds(1003, 78, 124, 14);
 		contentPane.add(lblAccountIdFrom);
 		
 		accountIdBill = new JTextField();
-		accountIdBill.setBounds(1074, 100, 86, 20);
+		accountIdBill.setBounds(1035, 100, 86, 20);
 		contentPane.add(accountIdBill);
 		accountIdBill.setColumns(10);
 		
 		btnPaybill = new JButton("PayBill");
-		btnPaybill.setBounds(1023, 132, 89, 23);
+		btnPaybill.setBounds(1000, 131, 89, 23);
 		contentPane.add(btnPaybill);
+		
+		lblNewLabel_1 = new JLabel("sumToPay");
+		lblNewLabel_1.setBounds(1158, 23, 60, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		sumToPayBill = new JTextField();
+		sumToPayBill.setBounds(1189, 48, 86, 20);
+		contentPane.add(sumToPayBill);
+		sumToPayBill.setColumns(10);
+		
+		lblNewLabel_2 = new JLabel("Company");
+		lblNewLabel_2.setBounds(1158, 78, 46, 14);
+		contentPane.add(lblNewLabel_2);
+		
+		CompanyBill = new JTextField();
+		CompanyBill.setBounds(1189, 100, 86, 20);
+		contentPane.add(CompanyBill);
+		CompanyBill.setColumns(10);
+		
+		lblNewLabel_3 = new JLabel("ClientId");
+		lblNewLabel_3.setBounds(1158, 135, 46, 14);
+		contentPane.add(lblNewLabel_3);
+		
+		ClientIdBill = new JTextField();
+		ClientIdBill.setBounds(1189, 160, 86, 20);
+		contentPane.add(ClientIdBill);
+		ClientIdBill.setColumns(10);
+		
+		btnAddbill = new JButton("AddBill");
+		btnAddbill.setBounds(1189, 191, 89, 23);
+		contentPane.add(btnAddbill);
+	}
+	public void setBtnAddBillActionListener(ActionListener addBillActionListener)
+	{
+		btnAddbill.addActionListener(addBillActionListener);
 	}
 	public void setBtnPayBillActionListener (ActionListener btnPayBIllActionListenr)
 	{

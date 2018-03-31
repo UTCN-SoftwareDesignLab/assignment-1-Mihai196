@@ -154,5 +154,29 @@ public class UserRepositoryMySQL implements UserRepository {
 		}
 	}
 
+	@Override
+	public User findByUsername(String username) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM user where username=?");
+			findStatement.setString(1, username);
+			ResultSet rs=findStatement.executeQuery();
+			if (rs.next())
+			{
+				return getUserFromResultSet(rs);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 }

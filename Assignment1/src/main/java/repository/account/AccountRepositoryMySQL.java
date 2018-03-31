@@ -190,24 +190,4 @@ public class AccountRepositoryMySQL implements AccountRepository {
 			return false;
 		}
 	}
-
-	@Override
-	public List<Bill> findAllBills() {
-		// TODO Auto-generated method stub
-		List<Bill> bills=new ArrayList<>();
-		try 
-		{
-			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM bill");
-			ResultSet rs=findStatement.executeQuery();
-			while(rs.next())
-			{
-				bills.add(getBillFromResultSet(rs));
-			}
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-		return bills;
-	}
 }

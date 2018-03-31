@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import model.Account;
 import model.Bill;
 import model.builder.AccountBuilder;
+import model.builder.BillBuilder;
+import model.validation.AccountValidator;
 import model.validation.BillValidator;
 import model.validation.Notification;
 import model.validation.TransferValidator;
@@ -24,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public boolean addAccount(String type, double balance, int clientId) {
+	public Notification<Boolean> addAccount(String type, double balance, int clientId) {
 		// TODO Auto-generated method stub
 		/*
 		 * System.out.println("Hello from account service");
@@ -35,14 +37,40 @@ public class AccountServiceImpl implements AccountService {
 		 * System.out.println(account.getDateOfCreation());
 		 */
 		Account a = new AccountBuilder().setType(type).setBalance(balance).setClientId(clientId).build();
-		return accountRepository.addAccount(a);
+		AccountValidator accountValidator=new AccountValidator();
+		boolean accountValidation=accountValidator.validate(a);
+		Notification<Boolean> accountNotification=new Notification<>();
+		if (!accountValidation)
+		{
+			accountValidator.getErrors().forEach(accountNotification::addError);
+			accountNotification.setResult(Boolean.FALSE);
+		}
+		else
+		{
+			boolean result=accountRepository.addAccount(a);
+			accountNotification.setResult(result);
+		}
+		return accountNotification;
 	}
 
 	@Override
-	public boolean updateAccount(String type, double balance, int clientId, int id) {
+	public Notification<Boolean> updateAccount(String type, double balance, int clientId, int id) {
 		// TODO Auto-generated method stub
 		Account a = new AccountBuilder().setType(type).setBalance(balance).setClientId(clientId).setId(id).build();
-		return accountRepository.updateAccount(a);
+		AccountValidator accountValidator=new AccountValidator();
+		boolean accountValidation=accountValidator.validate(a);
+		Notification<Boolean> accountNotification=new Notification<>();
+		if (!accountValidation)
+		{
+			accountValidator.getErrors().forEach(accountNotification::addError);
+			accountNotification.setResult(Boolean.FALSE);
+		}
+		else
+		{
+			boolean result=accountRepository.updateAccount(a);
+			accountNotification.setResult(result);
+		}
+		return accountNotification;
 	}
 
 	@Override
@@ -108,38 +136,27 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public List<String> processBill(int billId, int accId) {
+	public Notification<Boolean> processBill(int billId, int accId) {
 		// TODO Auto-generated method stub
 		Bill bill = accountRepository.findBillById(billId);
 		Account account = accountRepository.findById(accId);
 		BillValidator billValidator = new BillValidator();
-		if (!billValidator.validate(bill, account)) {
-			return billValidator.getErrors();
+		boolean billValidation=billValidator.validate(bill, account);
+		Notification<Boolean> billNotification=new Notification<>();
+		if (!billValidation) {
+			billValidator.getErrors().forEach(billNotification::addError);
+			billNotification.setResult(Boolean.FALSE);
 		} else {
 			double newSumAcc = account.getBalance() - bill.getSumToPay();
 			Account updatedAccount = new AccountBuilder().setId(accId).setDateOfCreation(account.getDateOfCreation())
 					.setClientId(account.getClientId()).setBalance(newSumAcc).setType(account.getType()).build();
-			accountRepository.updateAccount(updatedAccount);
-			accountRepository.deleteBill(bill);
-			return Collections.emptyList();
+			boolean result1=accountRepository.updateAccount(updatedAccount);
+			boolean result2=accountRepository.deleteBill(bill);
+			billNotification.setResult(result1&result2);
 		}
+		return billNotification;
 	}
 
-	@Override
-	public DefaultTableModel fillBillData() {
-		// TODO Auto-generated method stub
-		DefaultTableModel tablemodel = new DefaultTableModel();
-		tablemodel.addColumn("Id");
-		tablemodel.addColumn("Company");
-		tablemodel.addColumn("SumToPay");
-		tablemodel.addColumn("ClientId");
-		List<Bill> bills = new ArrayList<Bill>();
-		bills = accountRepository.findAllBills();
-		for (Bill b : bills) {
-			tablemodel.addRow(new Object[] { b.getId(), b.getCompany(), b.getSumToPay(), b.getClientId() });
-		}
-		return tablemodel;
-	}
 
 	@Override
 	public Bill findBillById(int id) {

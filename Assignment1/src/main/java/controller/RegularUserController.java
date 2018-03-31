@@ -8,14 +8,19 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import database.Constants;
 import model.Account;
 import model.Bill;
 import model.Client;
+import model.User;
 import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
 import model.validation.Notification;
 import service.account.AccountService;
+import service.activity.ActivityService;
+import service.bill.BillService;
 import service.client.ClientService;
+import service.user.UserService;
 import view.LoginView;
 import view.RegularUserView;
 
@@ -24,14 +29,22 @@ public class RegularUserController {
 	private RegularUserView regularUserView;
 	private ClientService clientService;
 	private AccountService accountService;
+	private ActivityService activityService;
+	private UserService userService;
+	private BillService billService;
 	private LoginView loginView;
 
-	public RegularUserController(ClientService clientService, AccountService accountService,RegularUserView regularUserView,LoginView loginView ) {
+	public RegularUserController(ClientService clientService, AccountService accountService,
+			RegularUserView regularUserView, LoginView loginView, ActivityService activityService,
+			UserService userService,BillService billService) {
 		super();
-		this.regularUserView =regularUserView;
+		this.regularUserView = regularUserView;
 		this.clientService = clientService;
 		this.accountService = accountService;
-		this.loginView=loginView;
+		this.loginView = loginView;
+		this.activityService = activityService;
+		this.userService = userService;
+		this.billService=billService;
 		regularUserView.setAddClientButtonListener(new AddClientButtonListener());
 		regularUserView.setRemoveClientButtonListener(new RemoveClientButtonListener());
 		regularUserView.setUpdateClientButtonListener(new UpdateClientButtonListener());
@@ -44,8 +57,9 @@ public class RegularUserController {
 		regularUserView.setLogOutButtonListener(new LogOutButtonListener());
 		regularUserView.setBtnViewBillsActionListener(new btnViewBillsActionListener());
 		regularUserView.setBtnPayBillActionListener(new btnPayBillActionListener());
+		regularUserView.setBtnAddBillActionListener(new addBillActionListener());
 	}
-	private class btnPayBillActionListener implements ActionListener
+	private class addBillActionListener implements ActionListener
 	{
 
 		@Override
@@ -53,57 +67,86 @@ public class RegularUserController {
 			// TODO Auto-generated method stub
 			try
 			{
-				int billId=Integer.parseInt(regularUserView.getBillId().getText());
-				int accBillId=Integer.parseInt(regularUserView.getAccountIdBill().getText());
-				Bill bill=accountService.findBillById(billId);
-				List<String> errors=accountService.processBill(billId, accBillId);
-				Client client=clientService.findById(bill.getClientId());
-				Account account=accountService.findById(accBillId);
-				if (errors.isEmpty())
-				{
-					JOptionPane.showMessageDialog(null, "The process of the bill with id "+billId+ " was done successfully.Receipt generated");
-					String text1="S.C. "+bill.getCompany()+" S.R.L. \n";
-					String text2="Receipt for the bill with id "+bill.getId()+" was paid at the date "+System.currentTimeMillis();
-					String text3="Client : "+client.getName() + " having the personal numerical code "+ client.getPersNrCode();
-					String text4="Total amount paid " + bill.getSumToPay() + " dollars $";
-					String text=text1+"\n"+text2+"\n"+text3+text4;
-					try (PrintWriter out = new PrintWriter("ReceiptBill.txt")) {
-					    out.println(text);
-					}
+				double sumToPay=Double.parseDouble(regularUserView.getSumToPayBill().getText());
+				String company=regularUserView.getCompanyBill().getText();
+				int clientId=Integer.parseInt(regularUserView.getClientIdBill().getText());
+				Notification<Boolean> billNotification = billService.addBill(sumToPay, company, clientId);
+				if (!billNotification.hasErrors()) {
+					JOptionPane.showMessageDialog(null, "The new bill was added succesfully to the database");
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null, errors);
+					JOptionPane.showMessageDialog(null, billNotification.getFormattedErrors());
 				}
 				
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "An error occured. Please make sure you give the requested fields with the right types");
 			}
+			
 		}
 		
 	}
-	private class btnViewBillsActionListener implements ActionListener
-	{
+
+	private class btnPayBillActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			try {
-				DefaultTableModel tablemodel = accountService.fillBillData();
+				int billId = Integer.parseInt(regularUserView.getBillId().getText());
+				int accBillId = Integer.parseInt(regularUserView.getAccountIdBill().getText());
+				Bill bill = accountService.findBillById(billId);
+				Notification<Boolean> billNotification = accountService.processBill(billId, accBillId);
+				Client client = clientService.findById(bill.getClientId());
+				Account account = accountService.findById(accBillId);
+				if (!billNotification.hasErrors()) {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.BILLPAYMENT, user.getId());
+					JOptionPane.showMessageDialog(null,
+							"The process of the bill with id " + billId + " was done successfully.Receipt generated");
+					String text1 = "S.C. " + bill.getCompany() + " S.R.L. \n";
+					String text2 = "Receipt for the bill with id " + bill.getId() + " was paid at the date "
+							+ new java.sql.Date(System.currentTimeMillis());
+					String text3 = "Client : " + client.getName() + " having the personal numerical code "
+							+ client.getPersNrCode();
+					String text4 = "Total amount paid " + bill.getSumToPay() + " dollars $";
+					String text = text1 + System.lineSeparator() + text2 + System.lineSeparator() + text3
+							+ System.lineSeparator() + text4;
+					try (PrintWriter out = new PrintWriter("ReceiptBill.txt")) {
+						out.println(text);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, billNotification.getFormattedErrors());
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"An error occured. Please make sure you give the requested fields with the right types");
+			}
+		}
+
+	}
+
+	private class btnViewBillsActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try {
+				DefaultTableModel tablemodel = billService.fillBillData();
 				regularUserView.getBillsTable().setModel(tablemodel);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
 		}
-		
+
 	}
-	private class LogOutButtonListener implements ActionListener
-	{
+
+	private class LogOutButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -112,40 +155,36 @@ public class RegularUserController {
 			regularUserView.setVisible(false);
 			loginView.getTfUsername().setText("");
 			loginView.getTfPassword().setText("");
-			
+
 		}
-		
+
 	}
-	private class transferButtonListener implements ActionListener
-	{
+
+	private class transferButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			try
-			{
-				int id1=Integer.parseInt(regularUserView.getIdAcc1Field().getText());
-				int id2=Integer.parseInt(regularUserView.getIDAcc2Field().getText());
-				double sum=Double.parseDouble(regularUserView.getSumField().getText());
-				Notification<Boolean> transferNotification=accountService.transferMoney(id1, id2, sum);
-				if (transferNotification.hasErrors())
-				{
+			try {
+				int id1 = Integer.parseInt(regularUserView.getIdAcc1Field().getText());
+				int id2 = Integer.parseInt(regularUserView.getIDAcc2Field().getText());
+				double sum = Double.parseDouble(regularUserView.getSumField().getText());
+				Notification<Boolean> transferNotification = accountService.transferMoney(id1, id2, sum);
+				if (transferNotification.hasErrors()) {
 					JOptionPane.showMessageDialog(null, transferNotification.getFormattedErrors());
+				} else {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.MONEYTRANSFER, user.getId());
+					JOptionPane.showMessageDialog(null, "Transfer between accounts was done succesfully");
 				}
-				else
-				{
-				JOptionPane.showMessageDialog(null, "Transfer between accounts was done succesfully");
-				}
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "An error occured when trying to do the transfer.Please"
 						+ " make sure you give valid ids and sums of the correct types");
 			}
-			
+
 		}
-		
+
 	}
 
 	private class UpdateAccountButtonListener implements ActionListener {
@@ -160,16 +199,24 @@ public class RegularUserController {
 				double balance = Double.parseDouble(regularUserView.getBalanceField());
 
 				int clientId = Integer.parseInt(regularUserView.getClientField());
-				//System.out.println(clientId);
+				// System.out.println(clientId);
 				int id = Integer.parseInt(regularUserView.getAccIdField());
-				accountService.updateAccount(type,balance,clientId,id);
+				Notification<Boolean> accountNotification = accountService.updateAccount(type, balance, clientId, id);
+
+				if (accountNotification.hasErrors()) {
+					JOptionPane.showMessageDialog(null, accountNotification.getFormattedErrors());
+				}
+				else
+				{
+				User user = userService.findByUsername(loginView.getUsername());
+				activityService.addActivity(Constants.Activities.UPDATEDACCOUNT, user.getId());
 				JOptionPane.showMessageDialog(null,
 						"Account data for account with id " + id + " were updated succesfully to the database");
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"An error occured when trying to update the account");
+				JOptionPane.showMessageDialog(null, "An error occured when trying to update the account");
 			}
 		}
 
@@ -187,6 +234,8 @@ public class RegularUserController {
 			try {
 				int id = Integer.parseInt(regularUserView.getAccIdField());
 				accountService.deleteAccount(id);
+				User user = userService.findByUsername(loginView.getUsername());
+				activityService.addActivity(Constants.Activities.REMOVEACCOUNT, user.getId());
 				JOptionPane.showMessageDialog(null,
 						"Account with id " + id + " was deleted succesfully from the database");
 			} catch (Exception e) {
@@ -223,14 +272,21 @@ public class RegularUserController {
 
 			try {
 				String type = regularUserView.getTypeField();
-				//System.out.println("The type is" + type);
+				// System.out.println("The type is" + type);
 				double balance = Double.parseDouble(regularUserView.getBalanceField());
-				//System.out.println("The balance is" + balance);
+				// System.out.println("The balance is" + balance);
 				int clientId = Integer.parseInt(regularUserView.getClientField());
-				//System.out.println(clientId);
-				accountService.addAccount(type,balance,clientId);
-				JOptionPane.showMessageDialog(null,
-						"Account for client with id" + clientId + "was added succesfully to the database");
+				// System.out.println(clientId);
+				Notification<Boolean> accountNotification = accountService.addAccount(type, balance, clientId);
+
+				if (accountNotification.hasErrors()) {
+					JOptionPane.showMessageDialog(null, accountNotification.getFormattedErrors());
+				} else {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.ADDACCOUNT, user.getId());
+					JOptionPane.showMessageDialog(null,
+							"Account for client with id" + clientId + "was added succesfully to the database");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -269,10 +325,16 @@ public class RegularUserController {
 				Long idCardNr = Long.parseLong(regularUserView.getIdCardField());
 				Long persNrCode = Long.parseLong(regularUserView.getPersNrCodeField());
 				String address = regularUserView.getAddress();
+				Notification<Boolean> clientNotification = clientService.addClient(name, idCardNr, persNrCode, address);
 
-				clientService.addClient(name,idCardNr,persNrCode,address);
-				JOptionPane.showMessageDialog(null,
-						"Client with the name " + name + " was added succesfully to the database");
+				if (clientNotification.hasErrors()) {
+					JOptionPane.showMessageDialog(null, clientNotification.getFormattedErrors());
+				} else {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.ADDCLIENT, user.getId());
+					JOptionPane.showMessageDialog(null,
+							"Client with the name " + name + " was added succesfully to the database");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -290,8 +352,10 @@ public class RegularUserController {
 			try {
 				int id = Integer.parseInt(regularUserView.getClientIdField());
 				clientService.deleteClient(id);
+				User user = userService.findByUsername(loginView.getUsername());
+				activityService.addActivity(Constants.Activities.REMOVECLIENT, user.getId());
 				JOptionPane.showMessageDialog(null,
-						"Client with the Id " +id + " was deleted succesfully from the database");
+						"Client with the Id " + id + " was deleted succesfully from the database");
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,
@@ -314,9 +378,17 @@ public class RegularUserController {
 				Long persNrCode = Long.parseLong(regularUserView.getPersNrCodeField());
 				String address = regularUserView.getAddress();
 				int id = Integer.parseInt(regularUserView.getClientIdField());
-				clientService.updateClient(id,name,idCardNr,persNrCode,address);
-				JOptionPane.showMessageDialog(null,
-						"Client data for client " + name + " were updated succesfully to the database");
+				Notification<Boolean> clientNotification = clientService.updateClient(id, name, idCardNr, persNrCode,
+						address);
+
+				if (clientNotification.hasErrors()) {
+					JOptionPane.showMessageDialog(null, clientNotification.getFormattedErrors());
+				} else {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.UPDATEDCLIENT, user.getId());
+					JOptionPane.showMessageDialog(null,
+							"Client data for client " + name + " were updated succesfully to the database");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null,

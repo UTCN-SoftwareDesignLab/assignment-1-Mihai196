@@ -9,6 +9,9 @@ import view.AdministratorView;
 import view.LoginView;
 
 import javax.swing.*;
+
+import database.Constants;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -54,10 +57,10 @@ public class LoginController {
 					JOptionPane.showMessageDialog(loginView.getContentPane(), loginNotification.getFormattedErrors());
 				} else {
 					JOptionPane.showMessageDialog(loginView.getContentPane(), "Login successful!");
-					if (role.equals("employee")) {
+					if (role.equals(Constants.Roles.EMPLOYEE)) {
 						// make view visible for employee
 						regularUserController.setVisibilityforView();
-					} else if (role.equals("administrator")) {
+					} else if (role.equals(Constants.Roles.ADMINISTRATOR)) {
 						// make view visible for administrator
 						administratorController.setVisibility();
 					}

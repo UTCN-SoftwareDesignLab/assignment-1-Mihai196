@@ -20,5 +20,6 @@ public interface UserRepository {
     
     boolean removeUser(User user);
     boolean updateUser(User user);
+    User findByUsername(String username);
 
 }

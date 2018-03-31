@@ -2,13 +2,21 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import database.Constants;
+import model.Activity;
 import model.User;
 import model.builder.UserBuilder;
 import model.validation.Notification;
+import service.activity.ActivityService;
 import service.user.AuthenticationService;
 import service.user.UserService;
 import view.AdministratorView;
@@ -20,20 +28,80 @@ public class AdministratorController {
 	private AuthenticationService authenticationService;
 	private UserService userService;
 	private LoginView loginView;
+	private ActivityService activityService;
 
 	public AdministratorController(AuthenticationService authenticationService, UserService userService,
-			AdministratorView administratorView,LoginView loginView) {
+			AdministratorView administratorView,LoginView loginView,ActivityService activityService) {
 		super();
 		this.administratorView = administratorView;
 		this.authenticationService = authenticationService;
 		this.userService = userService;
 		this.loginView=loginView;
+		this.activityService=activityService;
 
 		administratorView.setAddUserButtonActionListener(new AddButtonActionListener());
 		administratorView.setBtnViewusersActionListener(new viewActionListener());
 		administratorView.setBtnRemoveuserActionListner(new removeActionListener());
 		administratorView.setBtnNewButtonActionListener(new LogOutActionListener());
+		administratorView.setViewActivityButton(new ViewActivityListener());
+		administratorView.setBtnGenerateReport(new generateReportListener());
 	}
+	private class generateReportListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try
+			{
+				Long userId=Long.parseLong(administratorView.getUserIdReport().getText());
+				DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+				Date dateFrom= new java.sql.Date(simpleDateFormat.parse(administratorView.getDateFrom().getText()).getTime());
+				Date dateTo=  new java.sql.Date(simpleDateFormat.parse(administratorView.getDateTo().getText()).getTime());
+				System.out.println(dateFrom);
+				System.out.println(dateTo);
+				List<Activity> reportActivities=activityService.findFromDateToDate(userId, dateFrom, dateTo);
+				System.out.println(reportActivities);
+				String allActivities="";
+				for(Activity activity:reportActivities)
+				{
+					allActivities+=activity.toString()+System.lineSeparator();
+				}
+				try (PrintWriter out = new PrintWriter("Report.txt")) {
+					out.println(allActivities);
+				}
+				JOptionPane.showMessageDialog(null, "Activity report for user with id "+userId+" was generated succesfully");
+				
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+	private class ViewActivityListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try
+			{
+				DefaultTableModel tablemodel=activityService.fillActivityData();
+				administratorView.getActivitiesTable().setModel(tablemodel);
+				
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+
 	private class LogOutActionListener implements ActionListener
 	{
 
@@ -56,7 +124,9 @@ public class AdministratorController {
 			// TODO Auto-generated method stub
 			try {
 				long id = Integer.parseInt(administratorView.getIdField().getText());
+				User user=userService.findByUsername(loginView.getUsername());
 				userService.removeUser(id);
+				activityService.addActivity(Constants.Activities.REMOVEUSER, user.getId());
 				JOptionPane.showMessageDialog(null, "Deletion of the user was performed succesfully");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -108,7 +178,11 @@ public class AdministratorController {
 				if (!regNotification.getResult())
 					JOptionPane.showMessageDialog(null, "Registration not successful, please try again later.");
 				else
+				{
+					User user=userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.ADDUSER, user.getId());
 					JOptionPane.showMessageDialog(null, "Addition of a new user done succesfull.");
+				}
 			}
 
 		}

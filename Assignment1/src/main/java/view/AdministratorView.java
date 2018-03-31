@@ -28,7 +28,37 @@ public class AdministratorView extends JFrame{
 	private JTextField roleField;
 	private JTable usersTable;
 	private JButton btnNewButton;
+	private JButton viewActivityButton;
+	private JTable activitiesTable;
+	private JTextField DateFrom;
+	private JTextField DateTo;
+	public JTextField getDateFrom() {
+		return DateFrom;
+	}
+
+	public JTextField getUserIdReport() {
+		return userIdReport;
+	}
+
+	public JTextField getDateTo() {
+		return DateTo;
+	}
+	private JButton btnGeneratereport;
+	private JTextField userIdReport;
+	private JLabel lblIdForUser;
 	
+	public void setBtnGenerateReport(ActionListener generateReportListener)
+	{
+		btnGeneratereport.addActionListener(generateReportListener);
+	}
+	
+	public JTable getActivitiesTable() {
+		return activitiesTable;
+	}
+	public void setViewActivityButton(ActionListener viewActivityListener)
+	{
+		viewActivityButton.addActionListener(viewActivityListener);
+	}
 	public void setAddUserButtonActionListener(ActionListener addButtonActionListener)
 	{
 		AddUserButton.addActionListener(addButtonActionListener);
@@ -133,10 +163,51 @@ public class AdministratorView extends JFrame{
 		scrollPanel2.setBounds(10, 220, 450, 230);
 		contentPane.add(scrollPanel2);
 		
+		activitiesTable=new JTable();
+		
 		btnNewButton = new JButton("LogOut");
-		btnNewButton.setBounds(342, 461, 118, 39);
+		btnNewButton.setBounds(783, 461, 118, 39);
 		contentPane.add(btnNewButton);
 		
+		viewActivityButton=new JButton("viewActivityTable");
+		viewActivityButton.setBounds(550, 149, 133, 25);
+		contentPane.add(viewActivityButton);		
+		
+		JScrollPane scrollPane = new JScrollPane(activitiesTable);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(508, 220, 393, 230);
+		contentPane.add(scrollPane);
+		
+		JLabel lblDateFromWhich = new JLabel("Date From Which you want to generate a report");
+		lblDateFromWhich.setBounds(535, 36, 239, 14);
+		contentPane.add(lblDateFromWhich);
+		
+		DateFrom = new JTextField();
+		DateFrom.setBounds(786, 33, 86, 20);
+		contentPane.add(DateFrom);
+		DateFrom.setColumns(10);
+		
+		JLabel lblDateToWhich = new JLabel("Date To Which you want to generate a report");
+		lblDateToWhich.setBounds(535, 79, 239, 14);
+		contentPane.add(lblDateToWhich);
+		
+		DateTo = new JTextField();
+		DateTo.setBounds(786, 79, 86, 20);
+		contentPane.add(DateTo);
+		DateTo.setColumns(10);
+		
+		btnGeneratereport = new JButton("GenerateReport");
+		btnGeneratereport.setBounds(716, 149, 133, 23);
+		contentPane.add(btnGeneratereport);
+		
+		userIdReport = new JTextField();
+		userIdReport.setBounds(786, 121, 86, 20);
+		contentPane.add(userIdReport);
+		userIdReport.setColumns(10);
+		
+		lblIdForUser = new JLabel("Id for user you want to generate a report");
+		lblIdForUser.setBounds(535, 124, 239, 14);
+		contentPane.add(lblIdForUser);
 	}
 	public void setBtnNewButtonActionListener(ActionListener logoutListener)
 	{

@@ -19,5 +19,7 @@ public interface UserService {
 	boolean updateUser(User user);
 	
 	DefaultTableModel fillUserData();
+	
+	User findByUsername(String username);
 
 }
