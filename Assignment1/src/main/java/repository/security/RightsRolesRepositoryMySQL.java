@@ -142,4 +142,21 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
 
         }
     }
+
+	@Override
+	public void deleteRolesforUser(Long userId) {
+		// TODO Auto-generated method stub
+		try
+		{
+			PreparedStatement deleteRoles = connection.prepareStatement(
+                    "DELETE FROM " + USER_ROLE + " WHERE  user_id = ?");
+            deleteRoles.setLong(1, userId);
+            deleteRoles.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
 }

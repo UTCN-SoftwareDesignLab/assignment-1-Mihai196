@@ -22,6 +22,10 @@ public class BillValidator {
 	}
 	public boolean validate(Bill bill,Account a)
 	{
+		if (a.getType().equals("saving")) 
+		{
+			errors.add("You cannot process a bill from a savings account");
+		}
 		if (a.getBalance()<bill.getSumToPay())
 		{
 			errors.add("Not enough money to pay the bill");

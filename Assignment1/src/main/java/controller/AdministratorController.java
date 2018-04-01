@@ -45,6 +45,34 @@ public class AdministratorController {
 		administratorView.setBtnNewButtonActionListener(new LogOutActionListener());
 		administratorView.setViewActivityButton(new ViewActivityListener());
 		administratorView.setBtnGenerateReport(new generateReportListener());
+		administratorView.setBtnUpdateuserActionListener(new updateActionListener());
+	}
+	private class updateActionListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			Long userId=Long.parseLong(administratorView.getIdField().getText());
+			String username = administratorView.getUserField().getText();
+			String password = administratorView.getPassField().getText();
+			String role=administratorView.getRoleField().getText();
+			Notification<Boolean> regNotification = userService.updateUser(userId, username, password,role);
+			if (regNotification.hasErrors()) {
+				JOptionPane.showMessageDialog(null, regNotification.getFormattedErrors());
+			} else {
+				if (!regNotification.getResult())
+					JOptionPane.showMessageDialog(null, "Update not successful, please try again later.");
+				else
+				{
+					User user=userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.UPDATEUSER, user.getId());
+					JOptionPane.showMessageDialog(null, "Update of the user done succesful.");
+				}
+			}
+			
+		}
+		
 	}
 	private class generateReportListener implements ActionListener
 	{
@@ -58,8 +86,6 @@ public class AdministratorController {
 				DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 				Date dateFrom= new java.sql.Date(simpleDateFormat.parse(administratorView.getDateFrom().getText()).getTime());
 				Date dateTo=  new java.sql.Date(simpleDateFormat.parse(administratorView.getDateTo().getText()).getTime());
-				System.out.println(dateFrom);
-				System.out.println(dateTo);
 				List<Activity> reportActivities=activityService.findFromDateToDate(userId, dateFrom, dateTo);
 				System.out.println(reportActivities);
 				String allActivities="";

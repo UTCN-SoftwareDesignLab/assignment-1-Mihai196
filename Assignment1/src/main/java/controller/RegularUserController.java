@@ -36,7 +36,7 @@ public class RegularUserController {
 
 	public RegularUserController(ClientService clientService, AccountService accountService,
 			RegularUserView regularUserView, LoginView loginView, ActivityService activityService,
-			UserService userService,BillService billService) {
+			UserService userService, BillService billService) {
 		super();
 		this.regularUserView = regularUserView;
 		this.clientService = clientService;
@@ -44,7 +44,7 @@ public class RegularUserController {
 		this.loginView = loginView;
 		this.activityService = activityService;
 		this.userService = userService;
-		this.billService=billService;
+		this.billService = billService;
 		regularUserView.setAddClientButtonListener(new AddClientButtonListener());
 		regularUserView.setRemoveClientButtonListener(new RemoveClientButtonListener());
 		regularUserView.setUpdateClientButtonListener(new UpdateClientButtonListener());
@@ -58,35 +58,52 @@ public class RegularUserController {
 		regularUserView.setBtnViewBillsActionListener(new btnViewBillsActionListener());
 		regularUserView.setBtnPayBillActionListener(new btnPayBillActionListener());
 		regularUserView.setBtnAddBillActionListener(new addBillActionListener());
+		regularUserView.setBtnViewAccountsForClientActionListener(new viewAccountsForClientListener());
 	}
-	private class addBillActionListener implements ActionListener
-	{
+
+	private class viewAccountsForClientListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			try
-			{
-				double sumToPay=Double.parseDouble(regularUserView.getSumToPayBill().getText());
-				String company=regularUserView.getCompanyBill().getText();
-				int clientId=Integer.parseInt(regularUserView.getClientIdBill().getText());
+			try {
+				int id = Integer.parseInt(regularUserView.getClientField());
+				List<Account> accountsForClient = accountService.findAccountsClient(id);
+				String allAccounts = "";
+				for (Account a : accountsForClient) {
+					allAccounts += a.toString() + System.lineSeparator();
+				}
+				JOptionPane.showMessageDialog(null, allAccounts);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Make sure you give a valid clientId to see his accounts");
+			}
+		}
+
+	}
+
+	private class addBillActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			try {
+				double sumToPay = Double.parseDouble(regularUserView.getSumToPayBill().getText());
+				String company = regularUserView.getCompanyBill().getText();
+				int clientId = Integer.parseInt(regularUserView.getClientIdBill().getText());
 				Notification<Boolean> billNotification = billService.addBill(sumToPay, company, clientId);
 				if (!billNotification.hasErrors()) {
 					JOptionPane.showMessageDialog(null, "The new bill was added succesfully to the database");
-				}
-				else
-				{
+				} else {
 					JOptionPane.showMessageDialog(null, billNotification.getFormattedErrors());
 				}
-				
-			}
-			catch(Exception e)
-			{
+
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 	}
 
 	private class btnPayBillActionListener implements ActionListener {
@@ -97,28 +114,40 @@ public class RegularUserController {
 			try {
 				int billId = Integer.parseInt(regularUserView.getBillId().getText());
 				int accBillId = Integer.parseInt(regularUserView.getAccountIdBill().getText());
-				Bill bill = accountService.findBillById(billId);
-				Notification<Boolean> billNotification = accountService.processBill(billId, accBillId);
+				Bill bill = billService.findBillById(billId);
 				Client client = clientService.findById(bill.getClientId());
-				Account account = accountService.findById(accBillId);
-				if (!billNotification.hasErrors()) {
-					User user = userService.findByUsername(loginView.getUsername());
-					activityService.addActivity(Constants.Activities.BILLPAYMENT, user.getId());
+				List<Account> accountsForClient = accountService.findAccountsClient(client.getId());
+				boolean search = false;
+				String allAccounts="";
+				for (Account a : accountsForClient) {
+					if (a.getId() == accBillId)
+						search = true;
+					allAccounts += a.toString() + System.lineSeparator();
+				}
+				if (search == false) {
 					JOptionPane.showMessageDialog(null,
-							"The process of the bill with id " + billId + " was done successfully.Receipt generated");
-					String text1 = "S.C. " + bill.getCompany() + " S.R.L. \n";
-					String text2 = "Receipt for the bill with id " + bill.getId() + " was paid at the date "
-							+ new java.sql.Date(System.currentTimeMillis());
-					String text3 = "Client : " + client.getName() + " having the personal numerical code "
-							+ client.getPersNrCode();
-					String text4 = "Total amount paid " + bill.getSumToPay() + " dollars $";
-					String text = text1 + System.lineSeparator() + text2 + System.lineSeparator() + text3
-							+ System.lineSeparator() + text4;
-					try (PrintWriter out = new PrintWriter("ReceiptBill.txt")) {
-						out.println(text);
-					}
+							"Please provide an account id owned by the client which pays the bill.Available Options: "+System.lineSeparator()+allAccounts);
 				} else {
-					JOptionPane.showMessageDialog(null, billNotification.getFormattedErrors());
+					Notification<Boolean> billNotification = billService.processBill(billId, accBillId);
+					if (!billNotification.hasErrors()) {
+						User user = userService.findByUsername(loginView.getUsername());
+						activityService.addActivity(Constants.Activities.BILLPAYMENT, user.getId());
+						JOptionPane.showMessageDialog(null, "The process of the bill with id " + billId
+								+ " was done successfully.Receipt generated");
+						String text1 = "S.C. " + bill.getCompany() + " S.R.L. \n";
+						String text2 = "Receipt for the bill with id " + bill.getId() + " was paid at the date "
+								+ new java.sql.Date(System.currentTimeMillis());
+						String text3 = "Client : " + client.getName() + " having the personal numerical code "
+								+ client.getPersNrCode();
+						String text4 = "Total amount paid " + bill.getSumToPay() + " dollars $";
+						String text = text1 + System.lineSeparator() + text2 + System.lineSeparator() + text3
+								+ System.lineSeparator() + text4;
+						try (PrintWriter out = new PrintWriter("ReceiptBill.txt")) {
+							out.println(text);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, billNotification.getFormattedErrors());
+					}
 				}
 
 			} catch (Exception e) {
@@ -205,13 +234,11 @@ public class RegularUserController {
 
 				if (accountNotification.hasErrors()) {
 					JOptionPane.showMessageDialog(null, accountNotification.getFormattedErrors());
-				}
-				else
-				{
-				User user = userService.findByUsername(loginView.getUsername());
-				activityService.addActivity(Constants.Activities.UPDATEDACCOUNT, user.getId());
-				JOptionPane.showMessageDialog(null,
-						"Account data for account with id " + id + " were updated succesfully to the database");
+				} else {
+					User user = userService.findByUsername(loginView.getUsername());
+					activityService.addActivity(Constants.Activities.UPDATEDACCOUNT, user.getId());
+					JOptionPane.showMessageDialog(null,
+							"Account data for account with id " + id + " were updated succesfully to the database");
 				}
 
 			} catch (Exception e) {

@@ -11,5 +11,6 @@ public interface ClientRepository {
 	boolean deleteClient(Client client);
 	Client findById(int id);
 	List<Client> findAllClients();
+	boolean removeAll();
 	
 }

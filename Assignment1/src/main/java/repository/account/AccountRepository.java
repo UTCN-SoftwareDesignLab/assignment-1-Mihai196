@@ -13,6 +13,6 @@ public interface AccountRepository {
 	boolean deleteAccount(Account account);
 	Account findById(int id) ;
 	List<Account> findAllAccounts();
-	Bill findBillById(int id);
-	boolean deleteBill(Bill bill);
+	boolean removeAll();
+	List<Account> findAccountsClient(int id);
 }

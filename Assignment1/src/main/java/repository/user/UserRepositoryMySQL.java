@@ -141,10 +141,13 @@ public class UserRepositoryMySQL implements UserRepository {
 		// TODO Auto-generated method stub
 		try
 		{
+			rightsRolesRepository.deleteRolesforUser(user.getId());
 			PreparedStatement updateStatement=connection.prepareStatement("UPDATE user SET username=?,password=? WHERE id=?");
 			updateStatement.setString(1, user.getUsername());
 			updateStatement.setString(2, user.getPassword());
+			updateStatement.setLong(3, user.getId());
 			updateStatement.executeUpdate();
+			rightsRolesRepository.addRolesToUser(user, user.getRoles());
 			return true;
 		}
 		catch(Exception e)

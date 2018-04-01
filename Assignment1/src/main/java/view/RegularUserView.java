@@ -73,6 +73,7 @@ public class RegularUserView extends JFrame {
 	}
 
 	private JButton btnAddbill;
+	private JButton btnViewaccountsforclient;
 	
 	
 
@@ -183,7 +184,7 @@ public class RegularUserView extends JFrame {
 		accIdField.setColumns(10);
 
 		JLabel lblAccountIdDeletioncreation = new JLabel("Account id deletion/creation");
-		lblAccountIdDeletioncreation.setBounds(746, 23, 134, 14);
+		lblAccountIdDeletioncreation.setBounds(746, 23, 172, 14);
 		contentPane.add(lblAccountIdDeletioncreation);
 
 		addAccButton = new JButton("AddAccount");
@@ -208,7 +209,7 @@ public class RegularUserView extends JFrame {
 		contentPane.add(scrollPanel1);
 		
 		JLabel lblTransferMoneyBetween = new JLabel("Transfer Money between 2 accounts");
-		lblTransferMoneyBetween.setBounds(746, 103, 176, 14);
+		lblTransferMoneyBetween.setBounds(746, 103, 274, 14);
 		contentPane.add(lblTransferMoneyBetween);
 		
 		JLabel lblIdacc = new JLabel("IDAcc1");
@@ -260,7 +261,7 @@ public class RegularUserView extends JFrame {
 		BillId.setColumns(10);
 		
 		JLabel lblAccountIdFrom = new JLabel("Account id for payment");
-		lblAccountIdFrom.setBounds(1003, 78, 124, 14);
+		lblAccountIdFrom.setBounds(1003, 78, 147, 14);
 		contentPane.add(lblAccountIdFrom);
 		
 		accountIdBill = new JTextField();
@@ -282,7 +283,7 @@ public class RegularUserView extends JFrame {
 		sumToPayBill.setColumns(10);
 		
 		lblNewLabel_2 = new JLabel("Company");
-		lblNewLabel_2.setBounds(1158, 78, 46, 14);
+		lblNewLabel_2.setBounds(1158, 78, 60, 14);
 		contentPane.add(lblNewLabel_2);
 		
 		CompanyBill = new JTextField();
@@ -302,6 +303,14 @@ public class RegularUserView extends JFrame {
 		btnAddbill = new JButton("AddBill");
 		btnAddbill.setBounds(1189, 191, 89, 23);
 		contentPane.add(btnAddbill);
+		
+		btnViewaccountsforclient = new JButton("ViewAccountsForClient");
+		btnViewaccountsforclient.setBounds(500, 159, 191, 23);
+		contentPane.add(btnViewaccountsforclient);
+	}
+	public void setBtnViewAccountsForClientActionListener(ActionListener viewAccountsForClientListener)
+	{
+		btnViewaccountsforclient.addActionListener(viewAccountsForClientListener);
 	}
 	public void setBtnAddBillActionListener(ActionListener addBillActionListener)
 	{

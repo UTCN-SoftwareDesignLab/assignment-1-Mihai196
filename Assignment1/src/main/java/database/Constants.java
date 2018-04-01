@@ -43,6 +43,7 @@ public class Constants {
     {
     	public static final String ADDUSER="addedUser";
     	public static final String REMOVEUSER="removedUser";
+    	public static final String UPDATEUSER="updatedUser";
     	public static final String ADDCLIENT="addedClient";
     	public static final String REMOVECLIENT="removedClient";
     	public static final String UPDATEDCLIENT="updatedClient";

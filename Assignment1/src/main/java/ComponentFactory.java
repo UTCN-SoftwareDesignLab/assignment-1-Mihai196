@@ -62,7 +62,7 @@ public class ComponentFactory {
         Connection connection = new DBConnectionFactory().getConnectionWrapper(componentsForTests).getConnection();
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
-        this.userService = new UserServiceImpl(userRepository);
+        this.userService = new UserServiceImpl(userRepository,rightsRolesRepository);
         this.authenticationService = new AuthenticationServiceMySQL(this.userRepository, this.rightsRolesRepository);
         this.clientRepository=new ClientRepositoryMySQL(connection);
         this.clientService=new ClientServiceImpl(clientRepository);
@@ -71,7 +71,7 @@ public class ComponentFactory {
         this.activityRepository=new ActivityRepositoryMySQL(connection);
         this.activityService=new ActivityServiceImpl(activityRepository);
         this.billRepository=new BillRepositoryMySQL(connection);
-        this.billService=new BillServiceImpl(billRepository);
+        this.billService=new BillServiceImpl(billRepository,accRepository);
     }
     public ActivityService getActivityService() {
 		return activityService;

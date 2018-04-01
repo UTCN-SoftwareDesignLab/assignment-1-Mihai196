@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import model.User;
+import model.validation.Notification;
 
 public interface UserService {
 	
@@ -16,7 +17,7 @@ public interface UserService {
 
 	boolean removeUser(Long id);
 
-	boolean updateUser(User user);
+	Notification<Boolean> updateUser(Long id,String username,String password,String role);
 	
 	DefaultTableModel fillUserData();
 	

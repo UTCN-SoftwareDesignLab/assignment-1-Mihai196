@@ -37,6 +37,11 @@ public class Account {
 	public int getClientId() {
 		return clientId;
 	}
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", type=" + type + ", balance=" + balance + ", dateOfCreation=" + dateOfCreation
+				+ ", clientId=" + clientId + "]";
+	}
 	public void setClientId(int clientId) {
 		this.clientId = clientId;
 	}

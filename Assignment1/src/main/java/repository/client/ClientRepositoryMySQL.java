@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,6 +140,26 @@ public class ClientRepositoryMySQL implements ClientRepository{
 				.setIdCardNr(rs.getLong("idCardNr"))
 				.setPersNrCode(rs.getLong("persNrCode"))
 				.setAddress(rs.getString("address")).build();
+	}
+
+
+	@Override
+	public boolean removeAll() {
+		try
+		{
+			Statement statement=connection.createStatement();
+			String sql="DELETE FROM client";
+			statement.executeUpdate(sql);
+			
+			String sqlResetIncrement = "ALTER TABLE CLIENT AUTO_INCREMENT = 1";
+        	statement.executeUpdate(sqlResetIncrement);
+			return true;
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	

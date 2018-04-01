@@ -17,7 +17,6 @@ public interface AccountService {
 	List<Account> findAllAccounts();
 	DefaultTableModel fillAccountData();
 	Notification<Boolean> transferMoney(int id1,int id2,double sum);
-	Notification<Boolean> processBill(int billId,int accId);
-	Bill findBillById(int id);
+	List<Account> findAccountsClient(int clientId);
 
 }

@@ -5,18 +5,23 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
+import model.Account;
 import model.Bill;
+import model.builder.AccountBuilder;
 import model.builder.BillBuilder;
 import model.validation.BillValidator;
 import model.validation.Notification;
+import repository.account.AccountRepository;
 import repository.bill.BillRepository;
 
 public class BillServiceImpl implements BillService {
 	private BillRepository billRepository;
+	private AccountRepository accountRepository;
 	
-	public BillServiceImpl(BillRepository billRepository) {
+	public BillServiceImpl(BillRepository billRepository,AccountRepository accountRepository) {
 		super();
 		this.billRepository = billRepository;
+		this.accountRepository=accountRepository;
 	}
 
 	@Override
@@ -55,6 +60,34 @@ public class BillServiceImpl implements BillService {
 			tablemodel.addRow(new Object[] { b.getId(), b.getCompany(), b.getSumToPay(), b.getClientId() });
 		}
 		return tablemodel;
+	}
+	@Override
+	public Notification<Boolean> processBill(int billId, int accId) {
+		// TODO Auto-generated method stub
+		Bill bill = billRepository.findBillById(billId);
+		Account account = accountRepository.findById(accId);
+		BillValidator billValidator = new BillValidator();
+		boolean billValidation=billValidator.validate(bill, account);
+		Notification<Boolean> billNotification=new Notification<>();
+		if (!billValidation) {
+			billValidator.getErrors().forEach(billNotification::addError);
+			billNotification.setResult(Boolean.FALSE);
+		} else {
+			double newSumAcc = account.getBalance() - bill.getSumToPay();
+			Account updatedAccount = new AccountBuilder().setId(accId).setDateOfCreation(account.getDateOfCreation())
+					.setClientId(account.getClientId()).setBalance(newSumAcc).setType(account.getType()).build();
+			boolean result1=accountRepository.updateAccount(updatedAccount);
+			boolean result2=billRepository.deleteBill(bill);
+			billNotification.setResult(result1&result2);
+		}
+		return billNotification;
+	}
+
+
+	@Override
+	public Bill findBillById(int id) {
+		// TODO Auto-generated method stub
+		return billRepository.findBillById(id);
 	}
 	
 	

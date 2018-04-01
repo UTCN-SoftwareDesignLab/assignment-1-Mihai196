@@ -136,32 +136,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Notification<Boolean> processBill(int billId, int accId) {
+	public List<Account> findAccountsClient(int clientId) {
 		// TODO Auto-generated method stub
-		Bill bill = accountRepository.findBillById(billId);
-		Account account = accountRepository.findById(accId);
-		BillValidator billValidator = new BillValidator();
-		boolean billValidation=billValidator.validate(bill, account);
-		Notification<Boolean> billNotification=new Notification<>();
-		if (!billValidation) {
-			billValidator.getErrors().forEach(billNotification::addError);
-			billNotification.setResult(Boolean.FALSE);
-		} else {
-			double newSumAcc = account.getBalance() - bill.getSumToPay();
-			Account updatedAccount = new AccountBuilder().setId(accId).setDateOfCreation(account.getDateOfCreation())
-					.setClientId(account.getClientId()).setBalance(newSumAcc).setType(account.getType()).build();
-			boolean result1=accountRepository.updateAccount(updatedAccount);
-			boolean result2=accountRepository.deleteBill(bill);
-			billNotification.setResult(result1&result2);
-		}
-		return billNotification;
+		return accountRepository.findAccountsClient(clientId);
 	}
-
-
-	@Override
-	public Bill findBillById(int id) {
-		// TODO Auto-generated method stub
-		return accountRepository.findBillById(id);
-	}
-
 }

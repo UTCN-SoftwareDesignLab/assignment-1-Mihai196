@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,52 +143,42 @@ public class AccountRepositoryMySQL implements AccountRepository {
 	}
 
 	@Override
-	public Bill findBillById(int id) {
+	public boolean removeAll() {
 		// TODO Auto-generated method stub
 		try
 		{
-			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM bill where id=?");
-			findStatement.setInt(1, id);
-			ResultSet rs=findStatement.executeQuery();
-			if (rs.next())
-			{
-				return getBillFromResultSet(rs);
-			}
-			else
-			{
-				return null;
-			}
+			Statement statement=connection.createStatement();
+			String sql="DELETE FROM account";
+			statement.executeUpdate(sql);
+			String sqlResetIncrement = "ALTER TABLE account AUTO_INCREMENT = 1";
+        	statement.executeUpdate(sqlResetIncrement);
+			return true;
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 	}
 
-	private Bill getBillFromResultSet(ResultSet rs) throws SQLException {
-		return new BillBuilder()
-				.setId(rs.getInt("id"))
-				.setCompany(rs.getString("company"))
-				.setSumToPay(rs.getDouble("sumToPay"))
-				.setClientId(rs.getInt("clientId")).build();
-	}
-
 	@Override
-	public boolean deleteBill(Bill bill) {
+	public List<Account> findAccountsClient(int id) {
 		// TODO Auto-generated method stub
-		try
+		List<Account> accounts=new ArrayList<>();
+		try 
 		{
-			PreparedStatement deleteStatement=connection.prepareStatement("DELETE FROM bill where id=?");
-			deleteStatement.setInt(1, bill.getId());
-			deleteStatement.executeUpdate();
-			return true;
-			
+			PreparedStatement findStatement=connection.prepareStatement("SELECT * FROM account where clientId=?");
+			findStatement.setInt(1, id);
+			ResultSet rs=findStatement.executeQuery();
+			while(rs.next())
+			{
+				accounts.add(getAccountFromResultSet(rs));
+			}
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return false;
 		}
+		return accounts;
 	}
 }
