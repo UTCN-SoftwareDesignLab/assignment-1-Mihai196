@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import database.Constants;
+
 /**
  * Created by Alex on 18/03/2017.
  */
@@ -26,7 +28,13 @@ public class UserValidator {
         this.user = user;
         errors = new ArrayList<>();
     }
-
+    public void validateRole(String role)
+    {
+    	if (!role.equals(Constants.Roles.ADMINISTRATOR)&&!role.equals(Constants.Roles.EMPLOYEE))
+    	{
+    		errors.add("Invalid role type.Available roles: administrator or employee");
+    	}
+    }
     public boolean validate() {
         validateUsername(user.getUsername());
         validatePassword(user.getPassword());

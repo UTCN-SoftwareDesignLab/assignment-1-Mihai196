@@ -27,7 +27,7 @@ public class ClientValidator {
 		}
 		if (String.valueOf(c.getPersNrCode()).length()!=NR_DIGITS_PNC)
 		{
-			errors.add("Client PNC must contain exacly 5 digits");
+			errors.add("Client PNC must contain exacly 10 digits");
 		}
 		return errors.isEmpty();
 	}

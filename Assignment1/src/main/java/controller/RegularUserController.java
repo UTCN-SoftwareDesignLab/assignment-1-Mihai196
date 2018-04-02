@@ -124,7 +124,7 @@ public class RegularUserController {
 						search = true;
 					allAccounts += a.toString() + System.lineSeparator();
 				}
-				if (search == false) {
+				if (!search ) {
 					JOptionPane.showMessageDialog(null,
 							"Please provide an account id owned by the client which pays the bill.Available Options: "+System.lineSeparator()+allAccounts);
 				} else {
@@ -183,7 +183,7 @@ public class RegularUserController {
 			loginView.setVisible(true);
 			regularUserView.setVisible(false);
 			loginView.getTfUsername().setText("");
-			loginView.getTfPassword().setText("");
+			//loginView.getTfPassword().setText("");
 
 		}
 

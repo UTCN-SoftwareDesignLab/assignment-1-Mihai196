@@ -1,5 +1,5 @@
 S.C. Electrica S.R.L. 
 
-Receipt for the bill with id 15 was paid at the date 2018-04-01
-Client : Marianela having the personal numerical code 1234567890
-Total amount paid 49.0 dollars $
+Receipt for the bill with id 4 was paid at the date 2018-04-02
+Client : Marinel having the personal numerical code 265184
+Total amount paid 25.0 dollars $

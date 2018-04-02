@@ -51,7 +51,7 @@ public class Boostrap {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
-                    "DROP TABLE  `account`,`client`,`activity`,`bill`, `role`, `user`;"
+                    "DROP TABLE  `account`,`activity`,`client`,`bill`, `role`, `user`;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {

@@ -46,9 +46,8 @@ public class LoginController {
 			String role = "";
 			try {
 				loginNotification = authenticationService.login(username, password);
-				role = loginNotification.getResult().getRoles().get(0).getRole();
-				// we take the role of the user who is trying to login
 			} catch (AuthenticationException e1) {
+				JOptionPane.showMessageDialog(null, "Invalid email or password");
 				e1.printStackTrace();
 			}
 
@@ -57,6 +56,8 @@ public class LoginController {
 					JOptionPane.showMessageDialog(loginView.getContentPane(), loginNotification.getFormattedErrors());
 				} else {
 					JOptionPane.showMessageDialog(loginView.getContentPane(), "Login successful!");
+					role = loginNotification.getResult().getRoles().get(0).getRole();
+					// we take the role of the user who is trying to login
 					if (role.equals(Constants.Roles.EMPLOYEE)) {
 						// make view visible for employee
 						regularUserController.setVisibilityforView();

@@ -93,6 +93,7 @@ public class AdministratorController {
 			catch(Exception e)
 			{
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Please make sure you give the required fields as valid dates. YYYY-MM--DD");
 			}
 			
 		}
@@ -128,7 +129,7 @@ public class AdministratorController {
 			loginView.setVisible(true);
 			administratorView.setVisible(false);
 			loginView.getTfUsername().setText("");
-			loginView.getTfPassword().setText("");
+			//loginView.getTfPassword().setText("");
 			
 		}
 		
