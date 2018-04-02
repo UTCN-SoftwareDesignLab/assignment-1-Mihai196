@@ -1,5 +1,7 @@
 package service.activity;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,9 +54,21 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	public List<Activity> findFromDateToDate(long userId, Date dateFrom, Date dateTo) {
+	public void findFromDateToDate(long userId, Date dateFrom, Date dateTo) {
 		// TODO Auto-generated method stub
-		return activityRepository.findFromDateToDate(userId, dateFrom, dateTo);
+		List<Activity> reportActivities=activityRepository.findFromDateToDate(userId, dateFrom, dateTo);
+		System.out.println(reportActivities);
+		String allActivities="";
+		for(Activity activity:reportActivities)
+		{
+			allActivities+=activity.toString()+System.lineSeparator();
+		}
+		try (PrintWriter out = new PrintWriter("Report.txt")) {
+			out.println(allActivities);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

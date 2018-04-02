@@ -86,16 +86,7 @@ public class AdministratorController {
 				DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 				Date dateFrom= new java.sql.Date(simpleDateFormat.parse(administratorView.getDateFrom().getText()).getTime());
 				Date dateTo=  new java.sql.Date(simpleDateFormat.parse(administratorView.getDateTo().getText()).getTime());
-				List<Activity> reportActivities=activityService.findFromDateToDate(userId, dateFrom, dateTo);
-				System.out.println(reportActivities);
-				String allActivities="";
-				for(Activity activity:reportActivities)
-				{
-					allActivities+=activity.toString()+System.lineSeparator();
-				}
-				try (PrintWriter out = new PrintWriter("Report.txt")) {
-					out.println(allActivities);
-				}
+				activityService.findFromDateToDate(userId, dateFrom, dateTo);
 				JOptionPane.showMessageDialog(null, "Activity report for user with id "+userId+" was generated succesfully");
 				
 			}

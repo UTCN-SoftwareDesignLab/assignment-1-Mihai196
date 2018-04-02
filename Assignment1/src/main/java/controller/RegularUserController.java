@@ -116,7 +116,7 @@ public class RegularUserController {
 				int accBillId = Integer.parseInt(regularUserView.getAccountIdBill().getText());
 				Bill bill = billService.findBillById(billId);
 				Client client = clientService.findById(bill.getClientId());
-				List<Account> accountsForClient = accountService.findAccountsClient(client.getId());
+				List<Account> accountsForClient = accountService.findAccountsClient(bill.getClientId());
 				boolean search = false;
 				String allAccounts="";
 				for (Account a : accountsForClient) {
